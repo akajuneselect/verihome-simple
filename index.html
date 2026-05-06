@@ -734,6 +734,7 @@
         return true;
       });
       uploadedFiles = [...uploadedFiles, ...valid];
+  if (valid.length > 0) { showMessage('\uD83D\uDD12 Reminder: please ensure your document does not contain sensitive personal details such as IRD numbers, bank account numbers, or passport information.', 'info'); }
       renderFileList();
     }
 
