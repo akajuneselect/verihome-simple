@@ -282,7 +282,7 @@ Produce a formal legal-style HTML report with:
 1. EXECUTIVE SUMMARY AND PURCHASE RECOMMENDATION (clear verdict: Proceed / Proceed with Conditions / Do Not Proceed — with reasons)
 2. HIGH RISK FINDINGS (formal legal analysis, cite specific NZ statute sections, vendor obligations, buyer remedies, cost estimates)
 3. MEDIUM RISK FINDINGS (full legal analysis with statute references)
-4. LOW RISK FINDINGS (legal context and monitoring)
+4. sessionId);LOW RISK FINDINGS (legal context and monitoring)
 5. NEGOTIATION STRATEGY (specific leverage points with suggested price reduction amounts, conditions to add to contract, remediation requests — written as instructions to buyer)
 6. FULL NEGOTIATION SCRIPT (exact wording the buyer can use when negotiating with the vendor or agent)
 7. LEGAL CONDITIONS TO ADD TO CONTRACT (specific clauses the buyer should request before going unconditional)
@@ -317,7 +317,7 @@ Format: Formal legal report style. Use <h3> headers with section numbers. Colour
     }).eq('stripe_session_id', sessionId);
 
     await sendReportForReview(customerEmail, customerName, packageType, record, reportHtml, allFindings, sessionId);
-    console.log('Report saved for review, admin notified:', sessionId);Email);
+    console.log('Report saved for review, admin notified:', sessionId);
 }
 
 // --- Supabase ------------------------------------------------------------------
