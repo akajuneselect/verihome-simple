@@ -324,7 +324,7 @@
   <!-- LAUNCH OFFER BANNER (fixed top) -->
   <div id="launch-banner" style="position:fixed;top:0;left:0;width:100%;z-index:1100;background:linear-gradient(90deg,#92400e,#b45309,#92400e);color:white;text-align:center;padding:0 1rem;height:40px;display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:0.8rem;white-space:nowrap;overflow:hidden;">
     <span style="background:#fbbf24;color:#78350f;padding:2px 10px;border-radius:20px;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;flex-shrink:0;">&#128293; Launch Offer</span>
-    <span style="font-weight:600;flex-shrink:0;">Save up to $100 &mdash; Ends 30 Jun 2025</span>
+    <span style="font-weight:600;flex-shrink:0;">Save up to $100 &mdash; Ends 30 Jun 2026</span>
     <span style="display:flex;align-items:center;gap:0.5rem;font-variant-numeric:tabular-nums;flex-shrink:0;">
       <span id="cd-days" style="font-weight:800;">--</span><span style="opacity:0.6;font-size:0.72rem;">d</span>
       <span style="opacity:0.4;margin:0 2px;">:</span>
@@ -875,7 +875,7 @@
   
   // ── COUNTDOWN TIMER ──
   (function() {
-    var FIXED_END = new Date('2025-06-30T23:59:59+12:00').getTime();
+    var FIXED_END = new Date('2026-06-30T23:59:59+12:00').getTime();
     function pad(n) { return String(n).padStart(2,'0'); }
     function tick() {
       var diff = FIXED_END - Date.now();
