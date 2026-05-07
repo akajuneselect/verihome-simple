@@ -1,17 +1,22 @@
 {
-  "version": 2,
-  "headers": [
-    {
-      "source": "/(.*).html",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
-      ]
+    "version": 2,
+    "functions": {
+          "api/legal-webhook.js": {
+                  "maxDuration": 60
+          }
     },
-    {
-      "source": "/",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
-      ]
-    }
-  ]
+    "headers": [
+          {
+                  "source": "/(.*).html",
+                  "headers": [
+                            { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+                  ]
+          },
+          {
+                  "source": "/",
+                  "headers": [
+                            { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+                  ]
+          }
+    ]
 }
