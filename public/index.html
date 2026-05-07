@@ -32,7 +32,7 @@
 
     /* NAV */
     nav {
-      position: fixed; top: 40px; width: 100%; z-index: 1000;
+      position: fixed; top: 0; width: 100%; z-index: 1000;
       background: rgba(26,60,94,0.96); backdrop-filter: blur(12px);
       padding: 0 2rem; height: 64px; display: flex; align-items: center;
       justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -51,7 +51,7 @@
 
     /* HERO */
     .hero {
-      min-height: 100vh; padding-top: 104px; position: relative; overflow: hidden;
+      min-height: 100vh; padding-top: 64px; position: relative; overflow: hidden;
       background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, #1e5799 100%);
       display: flex; align-items: center;
     }
@@ -272,9 +272,9 @@
     .negotiation-list li::before { content: '💰'; flex-shrink: 0; }
 
     /* TOAST / MESSAGE */
-    #message { display: none; position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
+    #message { display: none; position: fixed; bottom: 2rem; right: 1rem; left: 1rem; z-index: 9999;
       padding: 1rem 1.5rem; border-radius: var(--radius); font-size: 0.9rem; font-weight: 500;
-      max-width: 400px; box-shadow: var(--shadow-lg); animation: slideIn 0.3s ease; }
+      max-width: min(400px, calc(100vw - 2rem)); box-shadow: var(--shadow-lg); animation: slideIn 0.3s ease; }
     @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     #message.success { background: var(--safe); color: white; }
     #message.error { background: var(--danger); color: white; }
@@ -311,7 +311,7 @@
   <!-- NAV -->
   <nav>
     <a href="#" class="nav-brand">
-
+      <div class="nav-logo">🏠</div>
       <span class="nav-name">Veri<span>home</span> NZ</span>
     </a>
     <div class="nav-links">
@@ -321,21 +321,6 @@
       <a href="#upload" class="nav-cta">Free Preview ↑</a>
     </div>
   </nav>
-  <!-- LAUNCH OFFER BANNER (fixed top) -->
-  <div id="launch-banner" style="position:fixed;top:0;left:0;width:100%;z-index:1100;background:linear-gradient(90deg,#92400e,#b45309,#92400e);color:white;text-align:center;padding:0 1rem;height:40px;display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:0.8rem;white-space:nowrap;overflow:hidden;">
-    <span style="background:#fbbf24;color:#78350f;padding:2px 10px;border-radius:20px;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;flex-shrink:0;">&#128293; Launch Offer</span>
-    <span style="font-weight:600;flex-shrink:0;">Save up to $100 &mdash; Ends 30 Jun 2025</span>
-    <span style="display:flex;align-items:center;gap:0.5rem;font-variant-numeric:tabular-nums;flex-shrink:0;">
-      <span id="cd-days" style="font-weight:800;">--</span><span style="opacity:0.6;font-size:0.72rem;">d</span>
-      <span style="opacity:0.4;margin:0 2px;">:</span>
-      <span id="cd-hours" style="font-weight:800;">--</span><span style="opacity:0.6;font-size:0.72rem;">h</span>
-      <span style="opacity:0.4;margin:0 2px;">:</span>
-      <span id="cd-mins" style="font-weight:800;">--</span><span style="opacity:0.6;font-size:0.72rem;">m</span>
-      <span style="opacity:0.4;margin:0 2px;">:</span>
-      <span id="cd-secs" style="font-weight:800;">--</span><span style="opacity:0.6;font-size:0.72rem;">s</span>
-    </span>
-    <a href="#pricing" style="background:rgba(255,255,255,0.2);color:white;padding:3px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;text-decoration:none;flex-shrink:0;">View Offer &rarr;</a>
-  </div>
 
   <!-- HERO -->
   <section class="hero">
@@ -481,6 +466,10 @@
         </div>
         <div class="file-list" id="file-list"></div>
 
+                <!-- Privacy Notice -->
+        <p style="font-size:0.78rem;color:#475569;text-align:center;margin:0.5rem 0 1rem;line-height:1.5;">
+          🔒 <strong>Privacy tip:</strong> Your document is sent securely for analysis. Please avoid uploading files containing sensitive personal details such as IRD numbers, bank account numbers, or passport information.
+        </p>
         <button class="analyse-btn" id="analyse-btn" onclick="analyseDocuments()">
           <div class="loading-spinner" id="loading-spinner"></div>
           <span id="btn-text">🔍 Analyse for Free</span>
@@ -512,79 +501,85 @@
       </div>
     </div>
   </section>
-  <!-- PRICING -->
+
+
+  <!-- LAUNCH OFFER BANNER -->
+  <div id="launch-banner" style="background:linear-gradient(135deg,#1a3c5e,#0f2840);color:white;text-align:center;padding:1rem 2rem;">
+    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="background:#2ecc71;color:white;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Launch Offer</span>
+        <span style="font-size:0.95rem;font-weight:600;">Save up to $100 — Ends 30 Jun 2026</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.9rem;font-weight:700;letter-spacing:1px;">
+        <span id="cd-days">00</span>d :
+        <span id="cd-hours">00</span>h :
+        <span id="cd-mins">00</span>m :
+        <span id="cd-secs">00</span>s
+      </div>
+      <a href="#pricing" style="color:#2ecc71;font-size:0.85rem;font-weight:600;text-decoration:underline;">View Offer →</a>
+    </div>
+  </div>
+
+<!-- PRICING -->
   <section class="section pricing-bg" id="pricing">
     <div class="section-inner">
       <div class="section-label">Pricing</div>
       <h2 class="section-title">Get Your Full AI Analysis</h2>
       <p class="section-sub">Free preview always included. Pay only when you want the complete report. Promo codes accepted at checkout.</p>
       <div class="pricing-grid">
-
-        <!-- ESSENTIAL -->
         <div class="pricing-card">
           <h3>Essential Review</h3>
-          <p style="color:var(--gray-600);font-size:0.875rem;margin:-0.25rem 0 1rem;font-style:italic;">&ldquo;What are the risks in this property?&rdquo;</p>
           <div class="pricing-price">
-            <div style="font-size:0.85rem;color:#94a3b8;text-decoration:line-through;margin-bottom:2px;">Was $49 NZD incl. GST</div>
-            <span class="amount">$29</span>
-            <span class="currency">NZD incl. GST</span>
-            <span style="display:inline-block;background:#dcfce7;color:#166534;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;">Save $20</span>
-          </div>
-          <ul class="pricing-features">
-            <li>All uploaded documents analysed</li>
-            <li>Every risk identified &amp; categorised (High / Medium / Low)</li>
-            <li>Plain-English explanation of each issue</li>
-            <li>What each risk means for you as a buyer</li>
-            <li>What to do before going unconditional</li>
-            <li>48-hour delivery</li>
-          </ul>
-          <button class="pricing-btn pricing-btn-outline" onclick="handlePayment('essential')">Get Essential Report</button>
-        </div>
-
-        <!-- COMPLETE -->
-        <div class="pricing-card popular">
-          <div class="popular-badge">&#11088; Most Popular</div>
-          <h3>Complete Analysis</h3>
-          <p style="color:var(--gray-600);font-size:0.875rem;margin:-0.25rem 0 1rem;font-style:italic;">&ldquo;What does each risk cost me, and how do I negotiate?&rdquo;</p>
-          <div class="pricing-price">
-            <div style="font-size:0.85rem;color:#94a3b8;text-decoration:line-through;margin-bottom:2px;">Was $149 NZD incl. GST</div>
-            <span class="amount">$89</span>
-            <span class="currency">NZD incl. GST</span>
+            <div style="font-size:0.85rem;color:#94a3b8;text-decoration:line-through;margin-bottom:2px;">Was $129 NZD</div>
+            <span class="amount">$69</span> <span class="currency">NZD</span>
             <span style="display:inline-block;background:#dcfce7;color:#166534;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;">Save $60</span>
           </div>
           <ul class="pricing-features">
-            <li>Everything in Essential</li>
-            <li><strong>Cost estimate for each risk</strong> &mdash; know your negotiation numbers</li>
-            <li><strong>Specific negotiation leverage points</strong> &mdash; what to ask for and why</li>
-            <li>Relevant NZ legislation explained in context</li>
-            <li>Full due diligence checklist (10+ items)</li>
-            <li>24-hour delivery</li>
+            <li>Single document AI analysis</li>
+            <li>All risk findings unlocked</li>
+            <li>NZ-specific recommendations</li>
+            <li>Negotiation points</li>
+            <li>48-hour turnaround</li>
+            <li>PDF report summary</li>
           </ul>
-          <button class="pricing-btn pricing-btn-primary" onclick="handlePayment('complete')">Get Complete Report</button>
+          <button class="pricing-btn pricing-btn-outline" onclick="handlePayment('essential')">Select Essential</button>
         </div>
-
-        <!-- PREMIUM -->
-        <div class="pricing-card">
-          <div class="popular-badge" style="background:#b7791f;">Best Protection</div>
-          <h3>Premium Report</h3>
-          <p style="color:var(--gray-600);font-size:0.875rem;margin:-0.25rem 0 1rem;font-style:italic;">&ldquo;What should I say, and what clauses should I add?&rdquo;</p>
+        <div class="pricing-card popular">
+          <div class="popular-badge">⭐ Most Popular</div>
+          <h3>Complete Analysis</h3>
           <div class="pricing-price">
-            <div style="font-size:0.85rem;color:#94a3b8;text-decoration:line-through;margin-bottom:2px;">Was $249 NZD incl. GST</div>
-            <span class="amount">$149</span>
-            <span class="currency">NZD incl. GST</span>
-            <span style="display:inline-block;background:#dcfce7;color:#166534;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;">Save $100</span>
+            <div style="font-size:0.85rem;color:#94a3b8;text-decoration:line-through;margin-bottom:2px;">Was $249 NZD</div>
+            <span class="amount">$199</span> <span class="currency">NZD</span>
+            <span style="display:inline-block;background:#dcfce7;color:#166534;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;">Save $50</span>
+          </div>
+          <ul class="pricing-features">
+            <li>All documents AI analysis</li>
+            <li>Full risk assessment</li>
+            <li>Strategic purchase advice</li>
+            <li>Detailed negotiation strategy</li>
+            <li>24-hour turnaround</li>
+            <li>Due diligence checklist</li>
+            <li>Detailed PDF report</li>
+          </ul>
+          <button class="pricing-btn pricing-btn-primary" onclick="handlePayment('complete')">Select Complete</button>
+        </div>
+        <div class="pricing-card">
+          <h3>Premium Consultation</h3>
+          <div class="pricing-price">
+            <div style="font-size:0.85rem;color:#94a3b8;text-decoration:line-through;margin-bottom:2px;">Was $319 NZD</div>
+            <span class="amount">$259</span> <span class="currency">NZD</span>
+            <span style="display:inline-block;background:#dcfce7;color:#166534;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;">Save $60</span>
           </div>
           <ul class="pricing-features">
             <li>Everything in Complete</li>
-            <li><strong>Word-for-word negotiation script</strong> &mdash; exactly what to say to the agent</li>
-            <li><strong>Contract clauses to add</strong> &mdash; specific legal conditions to protect you</li>
-            <li>NZ statute references (e.g. s.36 Building Act 2004)</li>
-            <li>Guidance on when you need a solicitor</li>
-            <li>Priority 12-hour delivery</li>
+            <li>Priority 12-hour turnaround</li>
+            <li>Follow-up Q&A session</li>
+            <li>Custom negotiation strategy</li>
+            <li>Legal document templates</li>
+            <li>30-day email support</li>
           </ul>
-          <button class="pricing-btn pricing-btn-outline" onclick="handlePayment('premium')">Get Premium Report</button>
+          <button class="pricing-btn pricing-btn-outline" onclick="handlePayment('premium')">Select Premium</button>
         </div>
-
       </div>
 
       <!-- TRUST SIGNALS -->
@@ -626,46 +621,45 @@
     <div id="report-content"></div>
   </div>
 
-  <!-- WHY WE BUILT THIS -->
-  <section class="section" style="background:var(--primary-dark);">
-    <div class="section-inner" style="max-width:860px;">
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:center;">
-        <div style="text-align:center;">
-          <div style="width:88px;height:88px;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);border-radius:50%;margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;font-size:2rem;">&#127968;</div>
-          <div style="font-weight:700;color:white;font-size:0.9rem;">Verihome NZ Team</div>
-          <div style="color:rgba(255,255,255,0.6);font-size:0.78rem;margin-top:3px;">Auckland, New Zealand</div>
-        </div>
-        <div>
-          <div style="color:var(--accent);font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.75rem;">Why We Built This</div>
-          <p style="font-size:1.05rem;line-height:1.85;color:rgba(255,255,255,0.85);margin-bottom:1rem;">
-            In New Zealand, a single legal opinion can cost hundreds of dollars. Yet everyone deserves to understand what they&rsquo;re signing &mdash; and what&rsquo;s at stake &mdash; before making the most important financial decision of their life.
-          </p>
-          <p style="font-size:1.05rem;line-height:1.85;color:rgba(255,255,255,0.85);">
-            Whether you&rsquo;re struggling to make sense of a contract, or unsure what a risk finding really means for your wallet, we&rsquo;re here to help. We cut through the legal complexity, analyse the risks you&rsquo;re facing, and give you specific recommendations on what to negotiate and what to change &mdash; so you can buy your home with confidence, and get the best deal possible.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SAMPLE REPORT -->
-  <section class="section" style="background:var(--gray-50);">
-    <div class="section-inner" style="max-width:860px;text-align:center;">
+    <!-- SEE A SAMPLE REPORT -->
+  <section class="section" style="background:var(--white);">
+    <div class="section-inner" style="max-width:800px;">
       <div class="section-label">Transparency</div>
       <h2 class="section-title">See a Sample Report Before You Buy</h2>
-      <p class="section-sub" style="margin:0 auto 2rem;">Not sure what you&rsquo;ll receive? We believe in full transparency. Download a real sample report so you know exactly what to expect before making any payment.</p>
-      <div style="background:var(--white);border:2px dashed var(--gray-200);border-radius:var(--radius);padding:3rem 2rem;display:inline-block;min-width:320px;">
-        <div style="font-size:3rem;margin-bottom:1rem;">&#128196;</div>
-        <div style="font-weight:700;color:var(--gray-800);font-size:1.05rem;margin-bottom:0.5rem;">Sample Property Analysis Report</div>
-        <div style="color:var(--gray-600);font-size:0.875rem;margin-bottom:1.5rem;">Complete Analysis &mdash; Example LIM + Building Report</div>
-        <div style="background:var(--gray-200);color:var(--gray-600);padding:10px 28px;border-radius:8px;font-weight:600;font-size:0.9rem;display:inline-block;cursor:not-allowed;">
-          Coming Soon
-        </div>
-        <div style="color:var(--gray-600);font-size:0.78rem;margin-top:0.75rem;">Available shortly &mdash; check back soon</div>
+      <p class="section-sub">Not sure what you'll receive? We believe in full transparency. Download a real sample report so you know exactly what to expect before making any payment.</p>
+      <div style="margin-top:2rem;border:2px dashed var(--gray-200);border-radius:var(--radius);padding:2rem;text-align:center;background:var(--gray-50);">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">📄</div>
+        <div style="font-weight:700;color:var(--gray-800);font-size:1rem;margin-bottom:0.25rem;">Sample Property Analysis Report</div>
+        <div style="color:var(--gray-600);font-size:0.875rem;margin-bottom:1rem;">Complete Analysis — Example LIM + Building Report</div>
+        <span style="display:inline-block;background:var(--gray-200);color:var(--gray-600);padding:8px 20px;border-radius:8px;font-size:0.875rem;font-weight:600;">Coming Soon — Available shortly</span>
       </div>
     </div>
   </section>
 
+  <section class="section" style="background:var(--gray-50);">
+    <div class="section-inner" style="max-width:800px;">
+      <div style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+        <div style="flex:1;min-width:260px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
+            <div style="width:40px;height:40px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🏠</div>
+            <div>
+              <div style="font-weight:700;color:var(--gray-800);font-size:0.95rem;">Verihome NZ Team</div>
+              <div style="color:var(--gray-600);font-size:0.825rem;">Auckland, New Zealand</div>
+            </div>
+          </div>
+          <div class="section-label">Why We Built This</div>
+          <p style="color:var(--gray-600);font-size:0.925rem;line-height:1.75;margin-top:0.75rem;">
+            In New Zealand, a single legal opinion can cost hundreds of dollars. Yet everyone deserves to understand what they're signing — and what's at stake — before making the most important financial decision of their life.
+          </p>
+          <p style="color:var(--gray-600);font-size:0.925rem;line-height:1.75;margin-top:0.75rem;">
+            Whether you're struggling to make sense of a contract, or unsure what a risk finding really means for your wallet, we're here to help. We cut through the legal complexity, analyse the risks you're facing, and give you specific recommendations on what to negotiate and what to change — so you can buy your home with confidence, and get the best deal possible.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- WHY WE BUILT THIS -->
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
@@ -740,6 +734,7 @@
         return true;
       });
       uploadedFiles = [...uploadedFiles, ...valid];
+  if (valid.length > 0) { showMessage('\uD83D\uDD12 Reminder: please ensure your document does not contain sensitive personal details such as IRD numbers, bank account numbers, or passport information.', 'info'); }
       renderFileList();
     }
 
@@ -811,7 +806,7 @@
     async function handlePayment(packageType) {
       if (!uploadedFiles.length) { showMessage('Please upload your documents first.', 'error'); document.getElementById('upload').scrollIntoView({behavior:'smooth'}); return; }
       selectedPackage = packageType;
-      const prices = { essential: 2522, complete: 7739, premium: 12957 };
+      const prices = { essential: 6900, complete: 19900, premium: 25900 };
       setLoading(true, 'Setting up payment...');
       try {
         const res = await fetch('/api/legal-consultation', {
@@ -870,7 +865,7 @@
   
   // ── COUNTDOWN TIMER ──
   (function() {
-    var FIXED_END = new Date('2025-06-30T23:59:59+12:00').getTime();
+    var FIXED_END = new Date('2026-06-30T23:59:59+12:00').getTime();
     function pad(n) { return String(n).padStart(2,'0'); }
     function tick() {
       var diff = FIXED_END - Date.now();
@@ -896,6 +891,7 @@
     setInterval(tick, 1000);
   })();
 
-  </script>
+</script>
+<!-- cache-bust -->
 </body>
 </html>
