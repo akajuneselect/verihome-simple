@@ -11,7 +11,7 @@
   "routes": [
     {
       "src": "/property-score",
-      "dest": "/public/property-score.html"
+      "dest": "/property-score.html"
     }
   ],
   "headers": [
