@@ -226,8 +226,8 @@ async function generateAndSendReport({ customerEmail, customerName, packageType,
   const tierConfig = {
     essential: {
       model: 'gpt-4o-mini',
-      max_tokens: 1500,
-      systemPrompt: `You are a New Zealand property law analyst. Analyse property documents for a homebuyer and produce a clear, professional risk report. Reference NZ legislation where relevant (Property Law Act 2007, Building Act 2004, Unit Titles Act 2010, Resource Management Act 1991). Write for a non-lawyer buyer. Be concise and actionable.`,
+      max_tokens: 2500,
+      systemPrompt: `You are a New Zealand property law analyst. Analyse property documents for a homebuyer and produce a clear, professional risk report. Reference NZ legislation where relevant (Property Law Act 2007, Building Act 2004, Unit Titles Act 2010, Resource Management Act 1991). Write for a non-lawyer buyer. Be concise but thorough — each finding must include a clear explanation of WHY it matters, what could go wrong, and exactly what the buyer should do.`,
       userPrompt: (findings, fileTexts) => `Analyse these NZ property documents and produce an Essential Risk Report.
 
 RULE ENGINE PRE-SCAN:
@@ -236,19 +236,20 @@ ${findings.flatMap(f => f.ruleFindings).slice(0, 20).map((f, i) => `${i+1}. [${f
 DOCUMENT EXCERPTS:
 ${findings.flatMap(f => f.flaggedContexts).slice(0, 8).map((c, i) => `[Excerpt ${i+1}]: ${c}`).join('\n\n')}
 
-Produce a professional HTML report with these sections:
-1. EXECUTIVE SUMMARY (2-3 sentences: key risks, should buyer proceed?)
-2. HIGH RISK FINDINGS (each with: issue description, why it matters, one clear action)
-3. MEDIUM RISK FINDINGS (each with: issue description, recommended action)
-4. LOW RISK FINDINGS (brief list)
-5. PRE-UNCONDITIONAL CHECKLIST (5 must-do actions before signing)
+Produce a professional HTML report with these sections. IMPORTANT: Every single finding must be written as a full paragraph (3-5 sentences minimum), not just a one-liner. Each finding must explain: (1) what the issue is, (2) why it matters legally or financially to the buyer, (3) what the specific risk or worst-case scenario is, and (4) a clear recommended action.
 
-Format: Use <h3> for section headers, <ul><li> for lists. Colour-code: HIGH = red, MEDIUM = orange, LOW = green. Keep language plain and direct.`
+1. EXECUTIVE SUMMARY (2-3 sentences: overall risk level, key risks, clear recommendation on whether buyer should proceed)
+2. HIGH RISK FINDINGS (for each finding: full paragraph explaining the issue, NZ legal context, financial impact if ignored, and one specific action with a deadline)
+3. MEDIUM RISK FINDINGS (for each finding: full paragraph with explanation and specific recommended action)
+4. LOW RISK FINDINGS (brief but complete — 2 sentences each minimum)
+5. PRE-UNCONDITIONAL CHECKLIST (5-7 specific must-do actions before signing, each with a brief reason why)
+
+Format: Use <h3> for section headers, <div class="finding"> wrapping each individual finding, <p> for paragraphs. Colour-code: HIGH risk findings in a box with red left border, MEDIUM with orange, LOW with green. Keep language plain, direct, and actionable.`
     },
     complete: {
       model: 'gpt-4o-mini',
-      max_tokens: 3000,
-      systemPrompt: `You are a senior New Zealand property lawyer producing a detailed analysis for a homebuyer client. You have deep knowledge of NZ property law including the Property Law Act 2007, Unit Titles Act 2010, Building Act 2004, Resource Management Act 1991, and REINZ standards. Reference specific legislation by name. Provide detailed, actionable advice.`,
+      max_tokens: 4000,
+      systemPrompt: `You are a senior New Zealand property lawyer producing a detailed analysis for a homebuyer client. You have deep knowledge of NZ property law including the Property Law Act 2007, Unit Titles Act 2010, Building Act 2004, Resource Management Act 1991, and REINZ standards. Reference specific legislation by name and section number where possible. Provide detailed, actionable advice. Every finding must be a substantial paragraph that a client has genuinely paid for — not bullet points or brief mentions.`,
       userPrompt: (findings, fileTexts) => `Conduct a Complete Analysis of these NZ property documents.
 
 RULE ENGINE PRE-SCAN:
@@ -257,21 +258,23 @@ ${findings.flatMap(f => f.ruleFindings).slice(0, 20).map((f, i) => `${i+1}. [${f
 DOCUMENT EXCERPTS:
 ${findings.flatMap(f => f.flaggedContexts).slice(0, 10).map((c, i) => `[Excerpt ${i+1}]: ${c}`).join('\n\n')}
 
-Produce a comprehensive HTML report with:
-1. EXECUTIVE SUMMARY (overall risk assessment, clear purchase recommendation)
-2. HIGH RISK FINDINGS (detailed analysis, NZ legal context, specific action required, estimated cost/impact)
-3. MEDIUM RISK FINDINGS (full analysis, legal context, action steps)
-4. LOW RISK FINDINGS (analysis and monitoring recommendations)
-5. NEGOTIATION LEVERAGE POINTS (specific issues the buyer can use to negotiate price reduction or remediation, with suggested dollar amounts where possible)
-6. DUE DILIGENCE CHECKLIST (10+ specific actions before going unconditional, in priority order)
-7. RELEVANT NZ LEGISLATION (list which laws apply and why)
+Produce a comprehensive HTML report. CRITICAL REQUIREMENT: Every finding must be written as a detailed, substantive paragraph (4-6 sentences minimum). Do NOT use single-sentence bullet points for findings. Each finding must include: (a) a clear description of the specific issue found in the documents, (b) the legal or regulatory framework that applies under NZ law, (c) the realistic financial or legal consequences if the buyer ignores it, (d) a specific, actionable step the buyer must take, and (e) an urgency level (before going unconditional / before settlement / within 12 months).
 
-Format: Use <h3> headers, <ul><li> lists. Colour-code risks. Reference NZ legislation by name throughout.`
+Report sections:
+1. EXECUTIVE SUMMARY (overall risk assessment, clear purchase recommendation — proceed / proceed with conditions / reconsider)
+2. HIGH RISK FINDINGS (each as a full paragraph: specific issue found, NZ legal context with legislation name, financial impact estimate, what happens if ignored, specific action required, and timing)
+3. MEDIUM RISK FINDINGS (each as a full paragraph: issue, legal context, recommended action with timeframe)
+4. LOW RISK FINDINGS (2-3 sentences each: issue and monitoring recommendation)
+5. NEGOTIATION LEVERAGE POINTS (specific issues the buyer can use to negotiate, with suggested dollar reduction amounts or contract conditions where possible)
+6. DUE DILIGENCE CHECKLIST (10+ specific actions before going unconditional, priority-ordered, each with a one-sentence reason)
+7. RELEVANT NZ LEGISLATION (list which laws apply and why they matter for this specific property)
+
+Format: Use <h3> headers, <div class="finding"> for each individual finding. Colour-code risk levels with styled borders. Reference NZ legislation throughout.`
     },
     premium: {
       model: 'gpt-4o',
       max_tokens: 6000,
-      systemPrompt: `You are a senior NZ property conveyancing solicitor producing a formal legal analysis report. You have expert knowledge of NZ property law: Property Law Act 2007, Unit Titles Act 2010 (especially ss.144-148 pre-contract disclosure), Building Act 2004 (especially ss.36, 92, 364A regarding code compliance), Resource Management Act 1991, Weathertight Homes Resolution Services Act 2006, and standard REINZ S&P Agreement clauses. Cite specific sections. Write in formal legal report style but remain accessible to a non-lawyer buyer.`,
+      systemPrompt: `You are a senior NZ property conveyancing solicitor producing a formal legal analysis report. You have expert knowledge of NZ property law: Property Law Act 2007, Unit Titles Act 2010 (especially ss.144-148 pre-contract disclosure), Building Act 2004 (especially ss.36, 92, 364A regarding code compliance), Resource Management Act 1991, Weathertight Homes Resolution Services Act 2006, and standard REINZ S&P Agreement clauses. Cite specific sections. Write in formal legal report style but remain accessible to a non-lawyer buyer. This is a premium paid report — every section must be comprehensive, specific to the documents provided, and of genuine legal quality.`,
       userPrompt: (findings, fileTexts) => `Produce a Premium Legal Analysis Report for this NZ property purchase.
 
 RULE ENGINE PRE-SCAN:
@@ -280,23 +283,24 @@ ${findings.flatMap(f => f.ruleFindings).slice(0, 20).map((f, i) => `${i+1}. [${f
 DOCUMENT EXCERPTS:
 ${findings.flatMap(f => f.flaggedContexts).slice(0, 12).map((c, i) => `[Excerpt ${i+1}]: ${c}`).join('\n\n')}
 
-Produce a formal legal-style HTML report with:
-1. EXECUTIVE SUMMARY AND PURCHASE RECOMMENDATION (clear verdict: Proceed / Proceed with Conditions / Do Not Proceed — with reasons)
-2. HIGH RISK FINDINGS (formal legal analysis, cite specific NZ statute sections, vendor obligations, buyer remedies, cost estimates)
-3. MEDIUM RISK FINDINGS (full legal analysis with statute references)
-4. sessionId);LOW RISK FINDINGS (legal context and monitoring)
-5. NEGOTIATION STRATEGY (specific leverage points with suggested price reduction amounts, conditions to add to contract, remediation requests — written as instructions to buyer)
-6. FULL NEGOTIATION SCRIPT (exact wording the buyer can use when negotiating with the vendor or agent)
-7. LEGAL CONDITIONS TO ADD TO CONTRACT (specific clauses the buyer should request before going unconditional)
-8. PRE-UNCONDITIONAL DUE DILIGENCE CHECKLIST (priority-ordered, 15+ items)
-9. WHEN TO INVOLVE A SOLICITOR (specific issues that require professional legal advice)
-10. APPLICABLE NZ LEGISLATION (full list with relevant section references)
+Produce a formal legal-style HTML report. MANDATORY QUALITY STANDARD: Each finding must be a substantive legal analysis of 5-8 sentences minimum. Cite specific NZ statute sections (e.g., "s.36 Building Act 2004"). Identify the specific clause or item in the documents that triggered the finding. Quantify financial risks in NZD where possible. State the buyer's legal position, vendor obligations, and available remedies. Do not produce generic advice — it must be specific to the issues found.
 
-Format: Formal legal report style. Use <h3> headers with section numbers. Colour-code all risk levels. Cite statutes throughout as e.g. "s.36 Building Act 2004".`
+Report sections:
+1. EXECUTIVE SUMMARY AND PURCHASE RECOMMENDATION (clear verdict: Proceed / Proceed with Conditions / Do Not Proceed — with specific reasons tied to the documents reviewed)
+2. HIGH RISK FINDINGS (formal legal analysis for each: specific document reference, applicable NZ statute with section number, vendor's legal obligations, buyer's legal remedies, realistic cost estimate in NZD, and required action with deadline)
+3. MEDIUM RISK FINDINGS (full legal analysis: statute reference, action steps, timeframe)
+4. LOW RISK FINDINGS (legal context, monitoring recommendation)
+5. NEGOTIATION STRATEGY (specific leverage points with suggested price reduction amounts in NZD, specific conditions to add to contract, and remediation requests — written as direct instructions to the buyer)
+6. FULL NEGOTIATION SCRIPT (exact wording the buyer or their solicitor can use when negotiating with the vendor or agent — formatted as a ready-to-use script)
+7. LEGAL CONDITIONS TO ADD TO CONTRACT (specific clauses the buyer should request be added before going unconditional, with exact wording)
+8. PRE-UNCONDITIONAL DUE DILIGENCE CHECKLIST (15+ items, priority-ordered, each with a one-sentence legal reason)
+9. WHEN TO INVOLVE A SOLICITOR (specific issues from these documents that require immediate professional legal advice)
+10. APPLICABLE NZ LEGISLATION (full list with relevant section references and why each applies to this property)
+
+Format: Formal legal report style. Use <h3> headers with section numbers. Colour-code all risk levels. Cite statutes throughout.`
     }
   };
-
-  const tier = tierConfig[packageType] || tierConfig.complete;
+const tier = tierConfig[packageType] || tierConfig.complete;
 
   const aiResponse = await openai.chat.completions.create({
     model: tier.model,
@@ -537,22 +541,33 @@ async function notifyLegalTeam(record) {
 
 // --- Risk Count Parser --------------------------------------------------------
 function parseRiskCountsFromHtml(reportHtml, allFindings) {
-  // Count actual risks from AI-generated HTML report sections
   let highRisks = 0, medRisks = 0, lowRisks = 0;
   try {
-    const highSec = reportHtml.match(/HIGH[\s\S]*?(?=MEDIUM RISK|LOW RISK|NEGOTIATION|DUE DILIGENCE|PRE-UNCON|CHECKLIST|$)/i);
-    if (highSec) highRisks = (highSec[0].match(/<li/gi) || []).length;
-    const medSec = reportHtml.match(/MEDIUM RISK[\s\S]*?(?=LOW RISK|NEGOTIATION|DUE DILIGENCE|PRE-UNCON|CHECKLIST|$)/i);
-    if (medSec) medRisks = (medSec[0].match(/<li/gi) || []).length;
-    const lowSec = reportHtml.match(/LOW RISK[\s\S]*?(?=NEGOTIATION|DUE DILIGENCE|PRE-UNCON|CHECKLIST|DISCLAIMER|$)/i);
-    if (lowSec) lowRisks = (lowSec[0].match(/<li/gi) || []).length;
+    // Strategy 1: count data-risk attributes (preferred if AI uses them)
+    highRisks = (reportHtml.match(/data-risk=["']HIGH["']/gi) || []).length;
+    medRisks = (reportHtml.match(/data-risk=["']MEDIUM["']/gi) || []).length;
+    lowRisks = (reportHtml.match(/data-risk=["']LOW["']/gi) || []).length;
+
+    // Strategy 2: count <li> or <div class="finding"> inside each risk section
+    if (highRisks === 0 && medRisks === 0 && lowRisks === 0) {
+      const highMatch = reportHtml.match(/(?:HIGH RISK|HIGH-RISK)[\s\S]*?(?=(?:MEDIUM RISK|MEDIUM-RISK|LOW RISK|NEGOTIATION|DUE DILIGENCE|PRE-UNCON|CHECKLIST|WHEN TO|APPLICABLE|<\/div>\s*$)|$)/i);
+      const medMatch = reportHtml.match(/(?:MEDIUM RISK|MEDIUM-RISK)[\s\S]*?(?=(?:LOW RISK|LOW-RISK|NEGOTIATION|DUE DILIGENCE|PRE-UNCON|CHECKLIST|WHEN TO|APPLICABLE|<\/div>\s*$)|$)/i);
+      const lowMatch = reportHtml.match(/(?:LOW RISK|LOW-RISK)[\s\S]*?(?=(?:NEGOTIATION|DUE DILIGENCE|PRE-UNCON|CHECKLIST|WHEN TO|APPLICABLE|<\/div>\s*$)|$)/i);
+
+      if (highMatch) highRisks = (highMatch[0].match(/<li|<div class="finding/gi) || []).length;
+      if (medMatch) medRisks = (medMatch[0].match(/<li|<div class="finding/gi) || []).length;
+      if (lowMatch) lowRisks = (lowMatch[0].match(/<li|<div class="finding/gi) || []).length;
+    }
   } catch(e) { console.warn('parseRiskCountsFromHtml error:', e.message); }
-  // Fallback to rule engine if AI parsing yields nothing
-  if (highRisks === 0 && medRisks === 0 && lowRisks === 0 && allFindings) {
+
+  // Strategy 3: always fallback to rule engine if still zero
+  if ((highRisks + medRisks + lowRisks) === 0 && allFindings && allFindings.length > 0) {
     highRisks = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'HIGH').length, 0);
-    medRisks  = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'MEDIUM').length, 0);
-    lowRisks  = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'LOW').length, 0);
+    medRisks = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'MEDIUM').length, 0);
+    lowRisks = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'LOW').length, 0);
   }
+
+  console.log(`Risk counts: HIGH=${highRisks} MED=${medRisks} LOW=${lowRisks}`);
   return { highRisks, medRisks, lowRisks, total: highRisks + medRisks + lowRisks };
 }
 
