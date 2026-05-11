@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NZ Property Score — Free AI Analysis | Verihome</title>
+<meta name="description" content="Get an instant AI-powered property score for any NZ listing. Rate location, price, risk, and more — free tool by Verihome NZ.">
+<style>
+  :root {
+    --brand: #1a3c5e;
+    --brand-light: #e8f0f8;
+    --accent: #27ae60;
+    --warn: #e67e22;
+    --danger: #e74c3c;
+    --gold: #f39c12;
+    --text: #2c3e50;
+    --muted: #7f8c8d;
+    --border: #dde3ea;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(26,60,94,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f7fb; color: var(--text); min-height: 100vh; }
+
+  /* ── NAV ── */
+  nav { background: var(--brand); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  nav .logo { color: white; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.5px; text-decoration: none; }
+  nav .logo span { color: #7ec8e3; }
+  nav .cta-nav { background: var(--accent); color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: opacity .2s; }
+  nav .cta-nav:hover { opacity: 0.85; }
+
+  /* ── HERO ── */
+  .hero { background: linear-gradient(135deg, var(--brand) 0%, #2563a8 100%); color: white; padding: 52px 24px 44px; text-align: center; }
+  .hero h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 12px; line-height: 1.2; }
+  .hero h1 span { color: #7ec8e3; }
+  .hero p { font-size: 1.05rem; opacity: 0.88; max-width: 520px; margin: 0 auto 28px; line-height: 1.6; }
+  .badge-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); padding: 5px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.92); }
+
+  /* ── MAIN CARD ── */
+  .main { max-width: 780px; margin: -28px auto 48px; padding: 0 16px; }
+  .card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .card-header { background: var(--brand-light); padding: 20px 28px 18px; border-bottom: 1px solid var(--border); }
+  .card-header h2 { font-size: 1.05rem; color: var(--brand); font-weight: 700; }
+  .card-header p { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+  .card-body { padding: 28px; }
+
+  /* ── INPUT AREA ── */
+  .input-wrap { position: relative; }
+  .input-wrap input {
+    width: 100%; padding: 16px 18px; font-size: 1rem;
+    border: 2px solid var(--border); border-radius: 10px;
+    outline: none; transition: border .2s; color: var(--text);
+    font-family: inherit;
+  }
+  .input-wrap input:focus { border-color: var(--brand); }
+  .input-wrap input::placeholder { color: #adb5bd; }
+  .input-hint { font-size: 0.8rem; color: var(--muted); margin-top: 8px; }
+  .input-hint a { color: var(--brand); }
+
+  /* ── EXAMPLES ── */
+  .examples { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .ex-btn { background: var(--brand-light); border: 1px solid #c5d5e8; color: var(--brand); padding: 5px 12px; border-radius: 16px; font-size: 0.78rem; cursor: pointer; font-weight: 600; transition: background .15s; border-style: solid; }
+  .ex-btn:hover { background: #d4e3f5; }
+
+  /* ── SCORE BTN ── */
+  .score-btn {
+    width: 100%; margin-top: 20px; padding: 16px;
+    background: var(--brand); color: white; border: none; border-radius: 10px;
+    font-size: 1.05rem; font-weight: 700; cursor: pointer; letter-spacing: 0.3px;
+    transition: background .2s, transform .1s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .score-btn:hover:not(:disabled) { background: #234e78; }
+  .score-btn:active:not(:disabled) { transform: scale(0.99); }
+  .score-btn:disabled { background: #9ab0c8; cursor: not-allowed; }
+  .score-btn .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,.35); border-top-color: white; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+  .score-btn.loading .spinner { display: block; }
+  .score-btn.loading .btn-text::after { content: ''; animation: dots 1.2s infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes dots { 0%,20%{content:'.'} 40%{content:'..'} 60%,100%{content:'...'} }
+
+  /* ── LOADING STATES ── */
+  .progress-wrap { margin-top: 20px; display: none; }
+  .progress-wrap.show { display: block; }
+  .progress-steps { display: flex; flex-direction: column; gap: 10px; }
+  .p-step { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; background: #f8fafc; border: 1px solid var(--border); font-size: 0.9rem; color: var(--muted); transition: all .3s; }
+  .p-step.active { background: var(--brand-light); border-color: #9ab8d8; color: var(--brand); font-weight: 600; }
+  .p-step.done { background: #edfaf3; border-color: #a8e6c3; color: #1d7a46; font-weight: 600; }
+  .p-step .step-icon { font-size: 1.1rem; width: 22px; text-align: center; flex-shrink: 0; }
+  .step-spinner { width: 16px; height: 16px; border: 2px solid #9ab8d8; border-top-color: var(--brand); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
+
+  /* ── RESULTS ── */
+  #results { display: none; margin-top: 28px; }
+  #results.show { display: block; }
+
+  /* ── OVERALL SCORE ── */
+  .overall-score-card {
+    background: linear-gradient(135deg, var(--brand) 0%, #2563a8 100%);
+    color: white; border-radius: var(--radius); padding: 28px; text-align: center; margin-bottom: 20px;
+    position: relative; overflow: hidden;
+  }
+  .overall-score-card::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 160px; height: 160px; background: rgba(255,255,255,0.06); border-radius: 50%;
+  }
+  .score-big { font-size: 5rem; font-weight: 900; line-height: 1; margin: 8px 0 4px; }
+  .score-big span { font-size: 2rem; font-weight: 600; opacity: 0.7; }
+  .score-label { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
+  .score-verdict { font-size: 0.95rem; opacity: 0.85; max-width: 420px; margin: 0 auto; }
+  .score-property-name { font-size: 0.82rem; opacity: 0.65; margin-top: 8px; }
+
+  /* ── DIMENSION GRID ── */
+  .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  @media(max-width: 560px) { .dim-grid { grid-template-columns: 1fr; } }
+  .dim-card { background: white; border: 1.5px solid var(--border); border-radius: 10px; padding: 16px; transition: box-shadow .2s; }
+  .dim-card:hover { box-shadow: 0 4px 16px rgba(26,60,94,.1); }
+  .dim-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .dim-icon { font-size: 1.4rem; }
+  .dim-name { font-weight: 700; font-size: 0.9rem; color: var(--brand); }
+  .dim-score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .dim-score-num { font-size: 1.5rem; font-weight: 900; min-width: 42px; }
+  .dim-bar-wrap { flex: 1; height: 8px; background: #edf0f4; border-radius: 4px; overflow: hidden; }
+  .dim-bar { height: 100%; border-radius: 4px; transition: width 1s cubic-bezier(.4,0,.2,1); width: 0; }
+  .dim-summary { font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
+
+  /* score colours */
+  .score-s { color: #27ae60; } .bar-s { background: #27ae60; }
+  .score-a { color: #2ecc71; } .bar-a { background: #2ecc71; }
+  .score-b { color: #f39c12; } .bar-b { background: #f39c12; }
+  .score-c { color: var(--warn); } .bar-c { background: var(--warn); }
+  .score-d { color: var(--danger); } .bar-d { background: var(--danger); }
+
+  /* ── KEY FINDINGS ── */
+  .findings-section { background: white; border: 1.5px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+  .findings-section h3 { font-size: 0.95rem; font-weight: 700; color: var(--brand); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .finding-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f4f8; }
+  .finding-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .finding-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .dot-green { background: #27ae60; } .dot-orange { background: var(--warn); } .dot-red { background: var(--danger); }
+  .finding-text { font-size: 0.88rem; color: var(--text); line-height: 1.5; }
+  .finding-text strong { color: var(--brand); }
+
+  /* ── CTA BLOCK ── */
+  .cta-block {
+    background: linear-gradient(135deg, #1d4e2e 0%, #27ae60 100%);
+    border-radius: var(--radius); padding: 28px; color: white; text-align: center; margin-bottom: 20px;
+  }
+  .cta-block h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+  .cta-block p { font-size: 0.9rem; opacity: 0.88; margin-bottom: 20px; line-height: 1.55; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta-btn-primary { background: white; color: #1d4e2e; padding: 13px 26px; border-radius: 8px; text-decoration: none; font-weight: 800; font-size: 0.95rem; transition: transform .15s, box-shadow .15s; }
+  .cta-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+  .cta-btn-secondary { background: rgba(255,255,255,.15); color: white; padding: 13px 26px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.95rem; border: 1.5px solid rgba(255,255,255,.4); transition: background .15s; }
+  .cta-btn-secondary:hover { background: rgba(255,255,255,.25); }
+  .cta-services { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+  .cta-service { background: rgba(255,255,255,.12); padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer { background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px; padding: 12px 16px; font-size: 0.78rem; color: #7a5c00; line-height: 1.5; margin-bottom: 20px; }
+  .disclaimer strong { color: #5a4000; }
+
+  /* ── ERROR ── */
+  .error-box { background: #fff0f0; border: 1.5px solid #ffcdd2; border-radius: 10px; padding: 16px 20px; color: #c62828; font-size: 0.9rem; display: none; margin-top: 16px; }
+  .error-box.show { display: block; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--brand); color: rgba(255,255,255,.6); text-align: center; padding: 20px; font-size: 0.8rem; }
+  footer a { color: rgba(255,255,255,.8); }
+
+  /* ── HOW IT WORKS ── */
+  .how-section { max-width: 780px; margin: 0 auto 40px; padding: 0 16px; }
+  .how-section h2 { text-align: center; font-size: 1.2rem; color: var(--brand); font-weight: 800; margin-bottom: 20px; }
+  .how-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  @media(max-width:560px){ .how-grid { grid-template-columns: 1fr; } }
+  .how-card { background: white; border-radius: 10px; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(26,60,94,.07); }
+  .how-card .how-icon { font-size: 2rem; margin-bottom: 10px; }
+  .how-card h4 { font-size: 0.9rem; color: var(--brand); font-weight: 700; margin-bottom: 6px; }
+  .how-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── SHARE BUTTON ── */
+  .share-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+  .share-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); background: white; color: var(--text); transition: background .15s; text-decoration: none; }
+  .share-btn:hover { background: var(--brand-light); }
+  .share-btn.copied { color: var(--accent); border-color: var(--accent); }
+
+  /* ── SCORE RING ANIMATION ── */
+  .ring-wrap { position: relative; display: inline-block; margin: 8px 0; }
+  svg.ring { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: rgba(255,255,255,.15); stroke-width: 6; }
+  .ring-fg { fill: none; stroke: white; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 283; stroke-dashoffset: 283; transition: stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://www.verihome.co.nz" class="logo">Veri<span>home</span> NZ</a>
+  <a href="https://www.verihome.co.nz/#pricing" class="cta-nav">Full Legal Review →</a>
+</nav>
+
+<div class="hero">
+  <h1>Free NZ Property <span>AI Score</span></h1>
+  <p>Paste any Trade Me, realestate.co.nz listing URL or address — get an instant AI-powered score across 6 key dimensions in seconds.</p>
+  <div class="badge-row">
+    <span class="badge">🏡 Location &amp; Suburb</span>
+    <span class="badge">💰 Price vs Market</span>
+    <span class="badge">⚠️ Risk Signals</span>
+    <span class="badge">🏗️ Property Condition</span>
+    <span class="badge">📈 Investment Value</span>
+    <span class="badge">📄 Legal Complexity</span>
+  </div>
+</div>
+
+<div class="main">
+  <div class="card">
+    <div class="card-header">
+      <h2>🔍 Analyse a Property</h2>
+      <p>Works with Trade Me, realestate.co.nz, OneRoof links, or just a property address</p>
+    </div>
+    <div class="card-body">
+      <div class="input-wrap">
+        <input type="text" id="propertyInput" placeholder="e.g. https://www.trademe.co.nz/a/property/... or 12 Main Street, Auckland" autocomplete="off" />
+      </div>
+      <p class="input-hint">
+        ✅ Trade Me &nbsp;·&nbsp; realestate.co.nz &nbsp;·&nbsp; OneRoof &nbsp;·&nbsp; Any NZ address
+        &nbsp;·&nbsp; <a href="#how">How it works</a>
+      </p>
+      <div class="examples">
+        <span style="font-size:.78rem;color:var(--muted);align-self:center;">Try:</span>
+        <button class="ex-btn" onclick="useExample('14 Shortland Street, Auckland CBD, 1010')">Auckland CBD apartment</button>
+        <button class="ex-btn" onclick="useExample('45 Remuera Road, Remuera, Auckland 1050')">Remuera family home</button>
+        <button class="ex-btn" onclick="useExample('8 Willis Street, Wellington 6011')">Wellington CBD unit</button>
+        <button class="ex-btn" onclick="useExample('22 Fitzgerald Avenue, Christchurch 8011')">Christchurch character home</button>
+      </div>
+      <button class="score-btn" id="scoreBtn" onclick="scoreProperty()">
+        <div class="spinner"></div>
+        <span class="btn-text">✨ Score This Property</span>
+      </button>
+      <div class="error-box" id="errorBox"></div>
+
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-steps">
+          <div class="p-step" id="step1"><div class="step-icon">🔗</div><div>Identifying property details</div></div>
+          <div class="p-step" id="step2"><div class="step-icon">🗺️</div><div>Analysing location &amp; suburb data</div></div>
+          <div class="p-step" id="step3"><div class="step-icon">🤖</div><div>Running AI property assessment</div></div>
+          <div class="p-step" id="step4"><div class="step-icon">📊</div><div>Calculating dimension scores</div></div>
+          <div class="p-step" id="step5"><div class="step-icon">✅</div><div>Generating your report</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="results">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<div class="how-section" id="how">
+  <h2>How It Works</h2>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-icon">🔗</div>
+      <h4>1. Paste a Link or Address</h4>
+      <p>Any NZ property listing URL or street address — our AI extracts the details automatically.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-icon">🤖</div>
+      <h4>2. AI Analyses 6 Dimensions</h4>
+      <p>Location, price, risk signals, condition, investment potential, and legal complexity — scored out of 10.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-icon">📋</div>
+      <h4>3. Get Your Full Report</h4>
+      <p>Instant scores with plain-English explanations. Serious about the property? Get a full legal review from Verihome.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Protocol Zero Limited · <a href="https://www.verihome.co.nz">Verihome NZ</a> · AI-Powered Property Analysis ·
+  <a href="https://www.verihome.co.nz/disclaimer.html">Disclaimer</a> ·
+  <a href="https://www.verihome.co.nz/privacy.html">Privacy</a></p>
+  <p style="margin-top:6px;font-size:.75rem;opacity:.7">This free tool provides general information only and is not legal advice. Scores are AI estimates based on publicly available data.</p>
+</footer>
+
+<script>
+// ── Utility ──────────────────────────────────────────────────────────────────
+function useExample(val) {
+  document.getElementById('propertyInput').value = val;
+  document.getElementById('propertyInput').focus();
+}
+
+function showError(msg) {
+  const box = document.getElementById('errorBox');
+  box.textContent = '⚠️ ' + msg;
+  box.classList.add('show');
+}
+
+function hideError() {
+  document.getElementById('errorBox').classList.remove('show');
+}
+
+// ── Progress steps ────────────────────────────────────────────────────────────
+let stepTimers = [];
+function startProgress() {
+  document.getElementById('progressWrap').classList.add('show');
+  const steps = ['step1','step2','step3','step4','step5'];
+  steps.forEach(s => document.getElementById(s).classList.remove('active','done'));
+
+  let delay = 0;
+  steps.forEach((id, i) => {
+    stepTimers.push(setTimeout(() => {
+      // mark previous done
+      if (i > 0) {
+        const prev = document.getElementById(steps[i-1]);
+        prev.classList.remove('active');
+        prev.classList.add('done');
+        prev.querySelector('.step-icon').textContent = '✅';
+      }
+      document.getElementById(id).classList.add('active');
+    }, delay));
+    delay += 1800;
+  });
+}
+
+function endProgress() {
+  stepTimers.forEach(t => clearTimeout(t));
+  stepTimers = [];
+  ['step1','step2','step3','step4','step5'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('active');
+    el.classList.add('done');
+    el.querySelector('.step-icon').textContent = '✅';
+  });
+  setTimeout(() => document.getElementById('progressWrap').classList.remove('show'), 800);
+}
+
+// ── Score ─────────────────────────────────────────────────────────────────────
+async function scoreProperty() {
+  const input = document.getElementById('propertyInput').value.trim();
+  if (!input) { showError('Please enter a property URL or address.'); return; }
+
+  hideError();
+  const btn = document.getElementById('scoreBtn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.querySelector('.btn-text').textContent = 'Analysing';
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('results').innerHTML = '';
+  startProgress();
+
+  try {
+    const response = await fetch('/api/property-score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ input })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || data.error) {
+      throw new Error(data.error || 'Analysis failed. Please try again.');
+    }
+
+    endProgress();
+    renderResults(data);
+
+  } catch (err) {
+    endProgress();
+    showError(err.message || 'Something went wrong. Please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.querySelector('.btn-text').textContent = '✨ Score This Property';
+  }
+}
+
+// ── Enter key support ─────────────────────────────────────────────────────────
+document.getElementById('propertyInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') scoreProperty();
+});
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function gradeClass(score) {
+  if (score >= 9) return 's';
+  if (score >= 7.5) return 'a';
+  if (score >= 6) return 'b';
+  if (score >= 4.5) return 'c';
+  return 'd';
+}
+
+function gradeLabel(score) {
+  if (score >= 9) return '🌟 Excellent';
+  if (score >= 7.5) return '✅ Very Good';
+  if (score >= 6) return '👍 Good';
+  if (score >= 4.5) return '⚠️ Caution';
+  return '🚨 High Risk';
+}
+
+function dotClass(sentiment) {
+  if (sentiment === 'positive') return 'dot-green';
+  if (sentiment === 'neutral') return 'dot-orange';
+  return 'dot-red';
+}
+
+function renderResults(data) {
+  const container = document.getElementById('results');
+  const overall = data.overallScore;
+  const grade = gradeClass(overall);
+  const circumference = 283;
+  const offset = circumference - (overall / 10) * circumference;
+
+  const dimsHtml = data.dimensions.map(d => {
+    const g = gradeClass(d.score);
+    return `<div class="dim-card">
+      <div class="dim-header">
+        <span class="dim-icon">${d.icon}</span>
+        <span class="dim-name">${d.name}</span>
+      </div>
+      <div class="dim-score-row">
+        <span class="dim-score-num score-${g}">${d.score.toFixed(1)}</span>
+        <div class="dim-bar-wrap"><div class="dim-bar bar-${g}" id="bar_${d.id}" style="width:0%"></div></div>
+        <span style="font-size:.78rem;color:var(--muted);min-width:28px">/10</span>
+      </div>
+      <div class="dim-summary">${d.summary}</div>
+    </div>`;
+  }).join('');
+
+  const findingsHtml = data.keyFindings.map(f =>
+    `<div class="finding-item">
+      <div class="finding-dot ${dotClass(f.sentiment)}"></div>
+      <div class="finding-text"><strong>${f.title}:</strong> ${f.detail}</div>
+    </div>`
+  ).join('');
+
+  container.innerHTML = `
+    <div class="overall-score-card">
+      <div class="ring-wrap">
+        <svg class="ring" width="100" height="100" viewBox="0 0 100 100">
+          <circle class="ring-bg" cx="50" cy="50" r="45"/>
+          <circle class="ring-fg" id="ringFg" cx="50" cy="50" r="45"/>
+        </svg>
+      </div>
+      <div class="score-big" style="margin-top:-74px;position:relative;z-index:1">${overall.toFixed(1)}<span>/10</span></div>
+      <div class="score-label">${gradeLabel(overall)}</div>
+      <div class="score-verdict">${data.verdict}</div>
+      <div class="score-property-name">${data.propertyTitle}</div>
+    </div>
+
+    <div class="dim-grid">${dimsHtml}</div>
+
+    <div class="findings-section">
+      <h3>🔎 Key Findings</h3>
+      ${findingsHtml}
+    </div>
+
+    <div class="cta-block">
+      <h3>🏠 Want a Full Legal Review?</h3>
+      <p>This score is a starting point. Before you go unconditional, get a proper NZ property law analysis of the LIM report, building inspection, and sale &amp; purchase agreement — from $69.</p>
+      <div class="cta-buttons">
+        <a href="https://www.verihome.co.nz/#pricing" class="cta-btn-primary">Get Full Legal Review →</a>
+        <a href="https://www.verihome.co.nz" class="cta-btn-secondary">Learn More</a>
+      </div>
+      <div class="cta-services">
+        <span class="cta-service">📄 LIM Report Analysis</span>
+        <span class="cta-service">🔨 Building Inspection Review</span>
+        <span class="cta-service">📝 S&amp;P Agreement Check</span>
+        <span class="cta-service">⚡ From $69 NZD</span>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> This AI score is generated from publicly available information and is for general guidance only. It does not constitute legal, financial, or property advice. Scores may not reflect current market conditions or undisclosed property issues. Always conduct proper due diligence and consult a qualified NZ solicitor before making property decisions.
+    </div>
+
+    <div class="share-row">
+      <button class="share-btn" onclick="copyScore('${overall.toFixed(1)}', '${data.propertyTitle}')">📋 Copy Score</button>
+      <a class="share-btn" href="https://www.verihome.co.nz" target="_blank">🌐 Visit Verihome</a>
+    </div>
+  `;
+
+  container.classList.add('show');
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Animate bars and ring after DOM paint
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      data.dimensions.forEach(d => {
+        const bar = document.getElementById('bar_' + d.id);
+        if (bar) bar.style.width = (d.score * 10) + '%';
+      });
+      const ring = document.getElementById('ringFg');
+      if (ring) ring.style.strokeDashoffset = circumference - (overall / 10) * circumference;
+    }, 100);
+  });
+}
+
+function copyScore(score, title) {
+  const text = `Verihome NZ AI Property Score: ${score}/10 — ${title}\nGet your free score: https://www.verihome.co.nz/property-score`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    btn.textContent = '✅ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copy Score'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
