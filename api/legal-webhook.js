@@ -4,11 +4,13 @@ const { Resend } = require('resend');
 const OpenAI = require('openai');
 const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
+const ws = require('ws');
 
 // Initialize Supabase (service role for server-side writes)
 const supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
+    process.env.SUPABASE_SERVICE_ROLE_KEYh,
+    { realtime: { transport: ws } }
   );
 
 // Initialize Resend
