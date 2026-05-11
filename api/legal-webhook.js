@@ -9,7 +9,7 @@ const ws = require('ws');
 // Initialize Supabase (service role for server-side writes)
 const supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEYh,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
     { realtime: { transport: ws } }
   );
 
