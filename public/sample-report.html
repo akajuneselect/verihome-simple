@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Property Report — Verihome NZ</title>
+<meta name="description" content="See what a Verihome property legal review looks like. Real AI-powered analysis of LIM reports, title deeds, S&P agreements and more.">
+<style>
+:root {
+  --brand: #1a3c5e;
+  --brand-light: #e8f0f8;
+  --accent: #27ae60;
+  --warn: #e67e22;
+  --danger: #e74c3c;
+  --gold: #f39c12;
+  --text: #2c3e50;
+  --muted: #7f8c8d;
+  --border: #dde3ea;
+  --radius: 10px;
+  --shadow: 0 2px 16px rgba(26,60,94,0.09);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f7fb; color: var(--text); }
+
+/* NAV */
+nav { background: var(--brand); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+nav .logo { color: white; font-weight: 800; font-size: 1.2rem; text-decoration: none; letter-spacing: -0.5px; }
+nav .logo span { color: #7ec8e3; }
+.nav-links { display: flex; gap: 14px; align-items: center; }
+.nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; }
+.nav-cta { background: var(--accent); color: white !important; padding: 8px 18px; border-radius: 20px; font-weight: 700 !important; font-size: 0.85rem !important; opacity: 1 !important; }
+
+/* HERO BANNER */
+.hero-banner {
+  background: linear-gradient(135deg, var(--brand) 0%, #1e5799 100%);
+  color: white; padding: 44px 24px 36px; text-align: center;
+}
+.hero-banner h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; margin-bottom: 10px; }
+.hero-banner p { opacity: 0.88; font-size: 1.05rem; max-width: 560px; margin: 0 auto 20px; }
+.sample-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px; padding: 6px 16px; font-size: 0.85rem; font-weight: 600;
+}
+.cta-row { display: flex; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+.btn-primary { background: var(--accent); color: white; padding: 13px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 1rem; display: inline-block; transition: opacity .2s; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-secondary { background: rgba(255,255,255,0.15); color: white; padding: 13px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; border: 1px solid rgba(255,255,255,0.4); display: inline-block; }
+
+/* REPORT WRAPPER */
+.report-wrapper {
+  max-width: 860px; margin: 32px auto; padding: 0 20px 60px;
+  position: relative;
+}
+
+/* WATERMARK */
+.watermark-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; z-index: 5;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 120px,
+    rgba(26,60,94,0.028) 120px,
+    rgba(26,60,94,0.028) 240px
+  );
+}
+.watermark-text {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 5rem; font-weight: 900; color: rgba(26,60,94,0.055);
+  pointer-events: none; z-index: 5; white-space: nowrap; letter-spacing: 8px; user-select: none;
+}
+
+/* REPORT CARD */
+.report-card {
+  background: white; border-radius: 14px; box-shadow: var(--shadow);
+  overflow: hidden; margin-bottom: 20px;
+}
+
+/* REPORT HEADER */
+.report-header {
+  background: linear-gradient(135deg, var(--brand) 0%, #1e5799 100%);
+  color: white; padding: 32px 36px;
+  display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;
+}
+.report-header-left h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+.report-header-left .address { opacity: 0.88; font-size: 1rem; margin-bottom: 14px; }
+.report-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+.meta-pill {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 20px; padding: 4px 12px; font-size: 0.8rem;
+}
+.report-header-right { text-align: right; }
+.report-logo { font-size: 1.3rem; font-weight: 900; letter-spacing: -0.5px; }
+.report-logo span { color: #7ec8e3; }
+.report-date { opacity: 0.75; font-size: 0.82rem; margin-top: 4px; }
+.report-id { opacity: 0.6; font-size: 0.78rem; }
+
+/* EXECUTIVE SUMMARY */
+.exec-summary { padding: 28px 36px; border-bottom: 1px solid var(--border); }
+.section-title { font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+
+.verdict-row { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.verdict-icon { font-size: 2.8rem; line-height: 1; flex-shrink: 0; }
+.verdict-text h3 { font-size: 1.2rem; font-weight: 800; color: var(--warn); margin-bottom: 6px; }
+.verdict-text p { color: var(--muted); font-size: 0.95rem; line-height: 1.65; max-width: 600px; }
+
+/* RISK SCORECARD */
+.scorecard { padding: 24px 36px; border-bottom: 1px solid var(--border); }
+.risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 620px) { .risk-grid { grid-template-columns: 1fr 1fr; } }
+.risk-stat {
+  background: #f8f9fb; border-radius: 10px; padding: 16px 18px;
+  text-align: center; border: 1px solid var(--border);
+}
+.risk-stat .stat-number { font-size: 2rem; font-weight: 900; line-height: 1; }
+.risk-stat .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.risk-stat.high .stat-number { color: var(--danger); }
+.risk-stat.medium .stat-number { color: var(--warn); }
+.risk-stat.low .stat-number { color: var(--accent); }
+.risk-stat.info .stat-number { color: var(--brand); }
+.risk-stat.docs .stat-number { color: #8e44ad; }
+.risk-stat.total .stat-number { color: var(--text); }
+
+/* SECTION */
+.findings-section { padding: 24px 36px; border-bottom: 1px solid var(--border); }
+.findings-section:last-child { border-bottom: none; }
+
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; cursor: pointer; }
+.section-header-left { display: flex; align-items: center; gap: 10px; }
+.section-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+.section-icon.title { background: #fef9e7; }
+.section-icon.lim { background: #eaf4fb; }
+.section-icon.sp { background: #eafaf1; }
+.section-icon.building { background: #fdf2f8; }
+.section-icon.consent { background: #fef9e7; }
+.section-header-left h4 { font-size: 1.02rem; font-weight: 700; }
+.section-header-left .sub { font-size: 0.8rem; color: var(--muted); }
+.risk-badge {
+  padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+}
+.risk-badge.high { background: #fdedec; color: var(--danger); }
+.risk-badge.medium { background: #fef5e7; color: var(--warn); }
+.risk-badge.low { background: #eafaf1; color: var(--accent); }
+.risk-badge.info { background: #eaf4fb; color: #2980b9; }
+
+/* FINDING */
+.finding {
+  background: #fafbfc; border-radius: 10px; padding: 18px 20px;
+  margin-bottom: 12px; border-left: 4px solid #ddd; position: relative;
+}
+.finding.high { border-left-color: var(--danger); }
+.finding.medium { border-left-color: var(--warn); }
+.finding.low { border-left-color: var(--accent); }
+.finding.info { border-left-color: #3498db; }
+.finding-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.finding-title { font-weight: 700; font-size: 0.97rem; }
+.finding-body { font-size: 0.9rem; color: #4a5568; line-height: 1.7; }
+.finding-body strong { color: var(--text); }
+
+/* RECOMMENDATIONS */
+.rec-section { padding: 24px 36px; background: #f8f9fb; border-top: 1px solid var(--border); }
+.rec-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.rec-list li { display: flex; gap: 12px; align-items: flex-start; }
+.rec-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+.rec-text strong { display: block; font-size: 0.95rem; margin-bottom: 2px; }
+.rec-text span { font-size: 0.87rem; color: var(--muted); line-height: 1.6; }
+
+/* BLURRED SECTION (upgrade prompt) */
+.blur-section {
+  position: relative; overflow: hidden; border-radius: 10px;
+  margin: 0 -36px; padding: 0 36px;
+}
+.blur-content { filter: blur(5px); user-select: none; pointer-events: none; opacity: 0.7; }
+.blur-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(248,249,251,0.2) 0%, rgba(248,249,251,0.92) 50%, rgba(248,249,251,1) 100%);
+  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 28px;
+}
+.blur-cta {
+  text-align: center;
+}
+.blur-cta h4 { font-size: 1.05rem; font-weight: 800; color: var(--brand); margin-bottom: 6px; }
+.blur-cta p { color: var(--muted); font-size: 0.88rem; margin-bottom: 14px; }
+.blur-cta a { background: var(--accent); color: white; padding: 11px 26px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.95rem; display: inline-block; }
+
+/* UPGRADE BANNER */
+.upgrade-banner {
+  background: linear-gradient(135deg, #1a3c5e 0%, #2980b9 100%);
+  color: white; border-radius: 14px; padding: 32px 36px;
+  text-align: center; margin-top: 24px;
+}
+.upgrade-banner h3 { font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; }
+.upgrade-banner p { opacity: 0.88; font-size: 0.97rem; margin-bottom: 22px; max-width: 500px; margin-left: auto; margin-right: auto; }
+.pricing-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
+.price-card {
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px; padding: 18px 24px; min-width: 160px;
+}
+.price-card.featured { background: white; color: var(--brand); border-color: white; }
+.price-card .tier { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.75; margin-bottom: 4px; }
+.price-card.featured .tier { color: var(--muted); }
+.price-card .amount { font-size: 1.8rem; font-weight: 900; line-height: 1; }
+.price-card .desc { font-size: 0.8rem; opacity: 0.75; margin-top: 4px; }
+.price-card.featured .desc { color: var(--muted); }
+.upgrade-btn { background: var(--accent); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 1.05rem; display: inline-block; }
+.trust-pills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+.trust-pill { background: rgba(255,255,255,0.12); border-radius: 20px; padding: 5px 14px; font-size: 0.8rem; }
+
+/* DISCLAIMER */
+.disclaimer {
+  background: #f8f9fb; border-radius: 10px; padding: 16px 20px;
+  border: 1px solid var(--border); margin-top: 20px;
+  font-size: 0.82rem; color: var(--muted); line-height: 1.6;
+}
+
+/* FOOTER */
+footer { background: var(--brand); color: rgba(255,255,255,0.7); text-align: center; padding: 22px; font-size: 0.85rem; }
+footer a { color: #7ec8e3; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="watermark-overlay"></div>
+<div class="watermark-text">SAMPLE</div>
+
+<!-- NAV -->
+<nav>
+  <a href="https://www.verihome.co.nz" class="logo">Veri<span>home</span></a>
+  <div class="nav-links">
+    <a href="/property-score.html">Free Score Tool</a>
+    <a href="https://www.verihome.co.nz" class="nav-cta">Get Full Review</a>
+  </div>
+</nav>
+
+<!-- HERO BANNER -->
+<div class="hero-banner">
+  <div class="sample-badge">📄 Sample Report — for demonstration only</div>
+  <h1>This is What Your Report Looks Like</h1>
+  <p>A real Verihome analysis covers every document you've been sent — written in plain English, not legal jargon.</p>
+  <div class="cta-row">
+    <a href="https://www.verihome.co.nz" class="btn-primary">Get My Report from $69 →</a>
+    <a href="/property-score.html" class="btn-secondary">Free Score Tool</a>
+  </div>
+</div>
+
+<!-- REPORT WRAPPER -->
+<div class="report-wrapper">
+
+  <!-- REPORT CARD -->
+  <div class="report-card">
+
+    <!-- REPORT HEADER -->
+    <div class="report-header">
+      <div class="report-header-left">
+        <h2>Property Legal Risk Review</h2>
+        <div class="address">📍 42 Rimu Street, Papakura, Auckland 2110</div>
+        <div class="report-meta">
+          <span class="meta-pill">🏠 Freehold Title</span>
+          <span class="meta-pill">📐 642 m²</span>
+          <span class="meta-pill">🏗️ 1978 Build</span>
+          <span class="meta-pill">Essential Plan</span>
+        </div>
+      </div>
+      <div class="report-header-right">
+        <div class="report-logo">Veri<span>home</span></div>
+        <div class="report-date">12 May 2026</div>
+        <div class="report-id">Report #VH-2026-04831</div>
+      </div>
+    </div>
+
+    <!-- EXECUTIVE SUMMARY -->
+    <div class="exec-summary">
+      <div class="section-title">Executive Summary</div>
+      <div class="verdict-row">
+        <div class="verdict-icon">⚠️</div>
+        <div class="verdict-text">
+          <h3>Proceed with Caution — 3 Issues Require Attention Before Settlement</h3>
+          <p>Our AI analysis of your title deed, LIM report, and Sale &amp; Purchase Agreement has identified <strong>3 medium-risk findings</strong> and <strong>1 high-risk item</strong> that should be discussed with your conveyancing solicitor before you sign unconditionally. No deal-breakers were found, but the unpermitted deck addition and the drainage easement on the rear boundary carry real financial implications if not addressed at negotiation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RISK SCORECARD -->
+    <div class="scorecard">
+      <div class="section-title">Risk Scorecard</div>
+      <div class="risk-grid">
+        <div class="risk-stat high">
+          <div class="stat-number">1</div>
+          <div class="stat-label">🔴 High Risk</div>
+        </div>
+        <div class="risk-stat medium">
+          <div class="stat-number">3</div>
+          <div class="stat-label">🟡 Medium Risk</div>
+        </div>
+        <div class="risk-stat low">
+          <div class="stat-number">4</div>
+          <div class="stat-label">🟢 Low / Info</div>
+        </div>
+        <div class="risk-stat docs">
+          <div class="stat-number">3</div>
+          <div class="stat-label">📄 Docs Reviewed</div>
+        </div>
+        <div class="risk-stat info">
+          <div class="stat-number">2</div>
+          <div class="stat-label">⚡ Action Items</div>
+        </div>
+        <div class="risk-stat total">
+          <div class="stat-number">8</div>
+          <div class="stat-label">📊 Total Findings</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 1: TITLE DEED ===== -->
+    <div class="findings-section">
+      <div class="section-header">
+        <div class="section-header-left">
+          <div class="section-icon title">📋</div>
+          <div>
+            <h4>Title Deed Analysis</h4>
+            <div class="sub">Certificate of Title — NA45C/123</div>
+          </div>
+        </div>
+        <span class="risk-badge medium">Medium Risk</span>
+      </div>
+
+      <div class="finding medium">
+        <div class="finding-header">
+          <div class="finding-title">🟡 Drainage Easement on Rear Boundary (Instrument D459821)</div>
+          <span class="risk-badge medium">Medium</span>
+        </div>
+        <div class="finding-body">
+          The title shows a registered drainage easement running 1.8 metres along the full rear boundary in favour of Auckland Council. <strong>This restricts any future construction, landscaping, or permanent structures</strong> within that strip — including fences, garden beds with deep foundations, or a potential sleep-out or granny flat. While this easement is common in 1970s subdivisions and will not prevent the sale from proceeding, it meaningfully reduces the property's development potential. If you are purchasing with an eye to adding a dwelling at the rear or maximising section coverage, you should factor this constraint into your offer price. We recommend asking your solicitor to request a current drainage plan from Auckland Council to confirm the exact pipe depth and dimensions before going unconditional.
+        </div>
+      </div>
+
+      <div class="finding low">
+        <div class="finding-header">
+          <div class="finding-title">🟢 Memorandum of Encumbrance — Covenant E221304</div>
+          <span class="risk-badge low">Low</span>
+        </div>
+        <div class="finding-body">
+          A restrictive covenant from 1979 limits the property to a maximum of one residential dwelling and prohibits any commercial or industrial use. <strong>This is standard for residential freehold in this area</strong> and is unlikely to affect your intended use as a primary residence. The covenant has been in place for 47 years with no recorded breach. If you had plans for a home-based business with external clients or vehicle movements, you should confirm with your solicitor whether your intended activity is compliant. Otherwise, no action is required before settlement.
+        </div>
+      </div>
+
+      <div class="finding low">
+        <div class="finding-header">
+          <div class="finding-title">🟢 Right of Way — Registered Access Easement</div>
+          <span class="risk-badge low">Low</span>
+        </div>
+        <div class="finding-body">
+          There is a historical right of way registered against the title in favour of the neighbouring property (44 Rimu Street) for pedestrian access across the front left corner of the section. <strong>This easement appears to be dormant</strong> — the neighbouring property gained its own legal frontage when the road was widened in 1994. Your solicitor should confirm in writing with the dominant title owner that this easement is no longer exercised and explore whether it can be formally extinguished prior to or at settlement. This is a low-cost administrative step that would clarify your title for future resale.
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 2: LIM REPORT ===== -->
+    <div class="findings-section">
+      <div class="section-header">
+        <div class="section-header-left">
+          <div class="section-icon lim">🏛️</div>
+          <div>
+            <h4>LIM Report Analysis</h4>
+            <div class="sub">Land Information Memorandum — Auckland Council</div>
+          </div>
+        </div>
+        <span class="risk-badge high">High Risk</span>
+      </div>
+
+      <div class="finding high">
+        <div class="finding-header">
+          <div class="finding-title">🔴 Unpermitted Deck Addition — No Building Consent on Record</div>
+          <span class="risk-badge high">High</span>
+        </div>
+        <div class="finding-body">
+          The LIM report confirms that <strong>no building consent was issued for the rear timber deck</strong> (visible in the listing photographs, approximately 40 m² in size). Auckland Council records show a building consent for the original dwelling (BC1978-04521) and a 1994 re-roofing consent, but no consent for any deck, pergola, or outdoor structure addition. Under the Building Act 2004, structures of this size require a building consent, and the absence of one means the deck is a non-consented structure. This creates several risks for you as a buyer: (1) Council may issue a notice to fix requiring demolition or retrospective consent at your cost, which can range from $8,000–$25,000 depending on the complexity of the retrospective application; (2) Your home insurer may decline claims arising from the deck area; (3) Your bank's valuer may flag this during registered valuation, potentially affecting your mortgage approval. <strong>We strongly recommend</strong> requiring the vendor to obtain a Certificate of Acceptance from Auckland Council prior to settlement, or negotiating a price reduction sufficient to cover the cost of retrospective consent or removal. Do not proceed unconditionally until this is resolved.
+        </div>
+      </div>
+
+      <div class="finding medium">
+        <div class="finding-header">
+          <div class="finding-title">🟡 Outstanding Resource Consent — Neighbour's Boundary Fence Height</div>
+          <span class="risk-badge medium">Medium</span>
+        </div>
+        <div class="finding-body">
+          The LIM contains a notation that a resource consent application (RC2025-00831) was lodged by the owner of 44 Rimu Street in October 2025 seeking approval for a 2.4-metre boundary fence. <strong>This application was still pending at the date of the LIM</strong> (March 2026). If approved, the fence would run along the shared left boundary and would affect natural light to the western rooms of the house and the garden area. While you have no standing to object to a pending resource consent on a neighbouring property, you should be aware of this as it will affect your amenity. We recommend asking your agent to confirm the current status of RC2025-00831 with Auckland Council before settlement to understand whether and when this fence is likely to proceed.
+        </div>
+      </div>
+
+      <div class="finding medium">
+        <div class="finding-header">
+          <div class="finding-title">🟡 Historic Flooding Notation — 1% AEP Flood Zone Margin</div>
+          <span class="risk-badge medium">Medium</span>
+        </div>
+        <div class="finding-body">
+          The LIM notes that the rear 12% of the section (approximately 77 m²) falls within the 1-in-100-year flood extent as mapped by Auckland Council's Healthy Waters team. <strong>This notation does not mean the house floods</strong> — the dwelling itself sits above the mapped flood line — but it does restrict what can be built in that rear portion. It also means flood insurance premiums may be higher than for comparable properties outside the flood zone, and some insurers may apply exclusions to the rear section area. We recommend obtaining flood insurance quotes before going unconditional and factoring any premium increase into your total cost of ownership. The notation should also be disclosed in any future sale.
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 3: S&P AGREEMENT (BLURRED) ===== -->
+    <div class="findings-section">
+      <div class="section-header">
+        <div class="section-header-left">
+          <div class="section-icon sp">📝</div>
+          <div>
+            <h4>Sale &amp; Purchase Agreement Review</h4>
+            <div class="sub">ADLS/REINZ Standard Form — 9th Edition</div>
+          </div>
+        </div>
+        <span class="risk-badge medium">Medium Risk</span>
+      </div>
+
+      <div class="blur-section">
+        <div class="blur-content">
+          <div class="finding medium">
+            <div class="finding-header">
+              <div class="finding-title">🟡 Finance Condition — Wording Does Not Protect Against Valuation Shortfall</div>
+              <span class="risk-badge medium">Medium</span>
+            </div>
+            <div class="finding-body">
+              The finance condition as drafted states that the purchaser must obtain "finance approval" by 5:00pm on the 14th working day, but does not specify a minimum loan-to-value ratio or a minimum loan amount. This means that if your bank approves a loan for less than required due to a low registered valuation — a real risk given the unpermitted deck — the condition as worded may not allow you to cancel the agreement. Your solicitor should amend the clause to specify a minimum approved loan amount aligned to your purchase price and required LVR before the agreement is signed.
+            </div>
+          </div>
+          <div class="finding low">
+            <div class="finding-header">
+              <div class="finding-title">🟢 Deposit Release Clause — Vendor Seeking Early Release</div>
+              <span class="risk-badge low">Low</span>
+            </div>
+            <div class="finding-body">
+              The agreement contains a vendor-inserted special condition requesting release of the 10% deposit to the vendor upon satisfaction of all conditions, rather than the standard position of holding until settlement. While this is sometimes agreed, it exposes the purchaser to losing the deposit if the vendor becomes insolvent, is subject to a mortgagee sale, or the title transfers fail at settlement. We recommend either deleting this clause or ensuring the deposit is held in the real estate agent's trust account until a date no earlier than 3 working days before settlement.
+            </div>
+          </div>
+        </div>
+        <div class="blur-overlay">
+          <div class="blur-cta">
+            <h4>2 More S&amp;P Findings Hidden</h4>
+            <p>Upgrade to see the full Sale &amp; Purchase review, including deposit release risks and finance condition gaps.</p>
+            <a href="https://www.verihome.co.nz">Get Full Report from $69 →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECOMMENDATIONS -->
+    <div class="rec-section">
+      <div class="section-title">Recommended Next Steps</div>
+      <ul class="rec-list">
+        <li>
+          <div class="rec-icon">🔴</div>
+          <div class="rec-text">
+            <strong>Require vendor to resolve unpermitted deck (Priority: HIGH)</strong>
+            <span>Before going unconditional, ask the vendor to obtain a Certificate of Acceptance or retrospective building consent. If they refuse, negotiate a price reduction of $15,000–$25,000 to cover your costs as new owner.</span>
+          </div>
+        </li>
+        <li>
+          <div class="rec-icon">🟡</div>
+          <div class="rec-text">
+            <strong>Check RC2025-00831 status with Auckland Council</strong>
+            <span>Confirm whether the neighbouring fence resource consent has been determined. This affects your amenity and may affect value.</span>
+          </div>
+        </li>
+        <li>
+          <div class="rec-icon">🟡</div>
+          <div class="rec-text">
+            <strong>Ask solicitor to investigate dormant right of way</strong>
+            <span>Seek written confirmation it is no longer exercised and initiate extinguishment if possible. Low cost, high title clarity benefit.</span>
+          </div>
+        </li>
+        <li>
+          <div class="rec-icon">🟢</div>
+          <div class="rec-text">
+            <strong>Obtain flood insurance quotes before going unconditional</strong>
+            <span>The rear flood notation may increase premiums. Factor this into your ongoing costs before committing.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- /report-card -->
+
+  <!-- UPGRADE BANNER -->
+  <div class="upgrade-banner">
+    <h3>Ready to Protect Your Own Property Purchase?</h3>
+    <p>Upload your documents and our AI will deliver a report just like this one — tailored to your specific address, title, and LIM — within hours.</p>
+    <div class="pricing-row">
+      <div class="price-card">
+        <div class="tier">Essential</div>
+        <div class="amount">$69</div>
+        <div class="desc">Title + LIM review</div>
+      </div>
+      <div class="price-card featured">
+        <div class="tier">Complete</div>
+        <div class="amount">$129</div>
+        <div class="desc">+ S&amp;P Agreement review</div>
+      </div>
+      <div class="price-card">
+        <div class="tier">Premium</div>
+        <div class="amount">$199</div>
+        <div class="desc">All docs + priority</div>
+      </div>
+    </div>
+    <a href="https://www.verihome.co.nz" class="upgrade-btn">Start My Report Now →</a>
+    <div class="trust-pills">
+      <span class="trust-pill">✅ Plain English</span>
+      <span class="trust-pill">⚡ Same-day delivery</span>
+      <span class="trust-pill">🔒 Secure upload</span>
+      <span class="trust-pill">🏡 NZ property specialists</span>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <strong>⚠️ Sample Report Disclaimer:</strong> This is a fictional demonstration report for the property at 42 Rimu Street, Papakura. All findings, names, certificate numbers, and consent references are entirely fictitious and created for illustrative purposes only. This sample does not constitute legal advice. A real Verihome report is generated from the actual documents you upload. Always consult a qualified New Zealand solicitor before making property decisions.
+  </div>
+
+</div><!-- /report-wrapper -->
+
+<footer>
+  <p>© 2026 Verihome NZ — AI-Powered Property Risk Analysis | <a href="https://www.verihome.co.nz">verihome.co.nz</a> | <a href="/disclaimer.html">Disclaimer</a> | <a href="/privacy.html">Privacy</a></p>
+</footer>
+
+</body>
+</html>
