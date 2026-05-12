@@ -122,33 +122,53 @@ async function handleLegalConsultationPayment(session) {
         metadata: session.metadata || {},
   };
 
-  // 1. Save order to Supabase
-  await saveOrderToSupabase(record);
+  // ── Idempotency: skip everything if order already exists in DB ──────────────
+  try {
+    const { data: existingOrder } = await supabase
+      .from('orders')
+      .select('status')
+      .eq('stripe_session_id', session.id)
+      .single();
+    if (existingOrder) {
+      console.log('Idempotent skip — order already processed:', session.id, '| status:', existingOrder.status);
+      return;
+    }
+  } catch (e) {
+    // .single() throws if no row — that's fine, means order is new
+  }
 
-  // 2. Send confirmation email to client
+  // 1. Save order to Supabase
+  const saved = await saveOrderToSupabase(record);
+  if (saved === null) {
+    // Duplicate race condition — another webhook invocation already saved it
+    console.log('Duplicate insert race — aborting emails for session:', session.id);
+    return;
+  }
+
+  // 2. Send confirmation email to client (exactly once)
   await sendClientConfirmationEmail(customerEmail, customerName, record);
 
-  // 3. Notify internal team
+  // 3. Notify internal team (exactly once)
   await notifyLegalTeam(record);
 
-  // 4. Generate full AI report and email to client
+  // 4. Generate AI report and send admin review email
   if (storedFileKeys.length > 0) {
-        try {
-                await generateAndSendReport({
-                          customerEmail,
-                          customerName,
-                          packageType,
-                          docType,
-                          storedFileKeys,
-                          record,
-                          sessionId: session.id,
-                });
-        } catch (err) {
-                console.error('Report generation failed:', err.message);
-                // Don't fail the whole webhook &mdash; order is already saved, confirmation sent
-        }
+    try {
+      await generateAndSendReport({
+        customerEmail,
+        customerName,
+        packageType,
+        docType,
+        storedFileKeys,
+        record,
+        sessionId: session.id,
+      });
+    } catch (err) {
+      console.error('Report generation failed:', err.message);
+      // Don't fail the whole webhook — order is saved, confirmation sent
+    }
   } else {
-        console.warn('No file_keys in metadata &mdash; cannot generate report for session:', session.id);
+    console.warn('No file_keys in metadata — cannot generate report for session:', session.id);
   }
 }
 
@@ -541,33 +561,60 @@ async function notifyLegalTeam(record) {
 
 // --- Risk Count Parser --------------------------------------------------------
 function parseRiskCountsFromHtml(reportHtml, allFindings) {
-  let highRisks = 0, medRisks = 0, lowRisks = 0;
-  try {
-    // Strategy 1: count data-risk attributes (preferred if AI uses them)
-    highRisks = (reportHtml.match(/data-risk=["']HIGH["']/gi) || []).length;
-    medRisks = (reportHtml.match(/data-risk=["']MEDIUM["']/gi) || []).length;
-    lowRisks = (reportHtml.match(/data-risk=["']LOW["']/gi) || []).length;
-
-    // Strategy 2: count <li> or <div class="finding"> inside each risk section
-    if (highRisks === 0 && medRisks === 0 && lowRisks === 0) {
-      const highMatch = reportHtml.match(/(?:HIGH RISK|HIGH-RISK)[\s\S]*?(?=(?:MEDIUM RISK|MEDIUM-RISK|LOW RISK|NEGOTIATION|DUE DILIGENCE|PRE-UNCON|CHECKLIST|WHEN TO|APPLICABLE|<\/div>\s*$)|$)/i);
-      const medMatch = reportHtml.match(/(?:MEDIUM RISK|MEDIUM-RISK)[\s\S]*?(?=(?:LOW RISK|LOW-RISK|NEGOTIATION|DUE DILIGENCE|PRE-UNCON|CHECKLIST|WHEN TO|APPLICABLE|<\/div>\s*$)|$)/i);
-      const lowMatch = reportHtml.match(/(?:LOW RISK|LOW-RISK)[\s\S]*?(?=(?:NEGOTIATION|DUE DILIGENCE|PRE-UNCON|CHECKLIST|WHEN TO|APPLICABLE|<\/div>\s*$)|$)/i);
-
-      if (highMatch) highRisks = (highMatch[0].match(/<li|<div class="finding/gi) || []).length;
-      if (medMatch) medRisks = (medMatch[0].match(/<li|<div class="finding/gi) || []).length;
-      if (lowMatch) lowRisks = (lowMatch[0].match(/<li|<div class="finding/gi) || []).length;
+  if (!reportHtml) {
+    // Pure fallback to rule engine
+    if (allFindings && allFindings.length > 0) {
+      return {
+        highRisks: allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'HIGH').length, 0),
+        medRisks:  allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'MEDIUM').length, 0),
+        lowRisks:  allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'LOW').length, 0),
+        total: allFindings.reduce((s, f) => s + f.ruleFindings.length, 0),
+      };
     }
-  } catch(e) { console.warn('parseRiskCountsFromHtml error:', e.message); }
-
-  // Strategy 3: always fallback to rule engine if still zero
-  if ((highRisks + medRisks + lowRisks) === 0 && allFindings && allFindings.length > 0) {
-    highRisks = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'HIGH').length, 0);
-    medRisks = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'MEDIUM').length, 0);
-    lowRisks = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'LOW').length, 0);
+    return { highRisks: 0, medRisks: 0, lowRisks: 0, total: 0 };
   }
 
-  console.log(`Risk counts: HIGH=${highRisks} MED=${medRisks} LOW=${lowRisks}`);
+  let highRisks = 0, medRisks = 0, lowRisks = 0;
+  try {
+    // Strategy 1: explicit data-risk attributes
+    highRisks = (reportHtml.match(/data-risk=["']HIGH["']/gi) || []).length;
+    medRisks  = (reportHtml.match(/data-risk=["']MEDIUM["']/gi) || []).length;
+    lowRisks  = (reportHtml.match(/data-risk=["']LOW["']/gi) || []).length;
+
+    // Strategy 2: count findings/li items inside each section
+    if (highRisks + medRisks + lowRisks === 0) {
+      const highMatch = reportHtml.match(/(?:HIGH RISK|HIGH-RISK FINDINGS?)[\s\S]*?(?=(?:MEDIUM RISK|LOW RISK|NEGOTIATION|DUE DILIGENCE|PRE.UNCON|CHECKLIST|WHEN TO|APPLICABLE|<\/body)|$)/i);
+      const medMatch  = reportHtml.match(/(?:MEDIUM RISK|MEDIUM-RISK FINDINGS?)[\s\S]*?(?=(?:LOW RISK|NEGOTIATION|DUE DILIGENCE|PRE.UNCON|CHECKLIST|WHEN TO|APPLICABLE|<\/body)|$)/i);
+      const lowMatch  = reportHtml.match(/(?:LOW RISK|LOW-RISK FINDINGS?)[\s\S]*?(?=(?:NEGOTIATION|DUE DILIGENCE|PRE.UNCON|CHECKLIST|WHEN TO|APPLICABLE|<\/body)|$)/i);
+
+      if (highMatch) highRisks = (highMatch[0].match(/<div[^>]*class=["'][^"']*finding|<li[\s>]/gi) || []).length || Math.max(0, (highMatch[0].match(/<p>/gi) || []).length - 1);
+      if (medMatch)  medRisks  = (medMatch[0].match(/<div[^>]*class=["'][^"']*finding|<li[\s>]/gi) || []).length || Math.max(0, (medMatch[0].match(/<p>/gi) || []).length - 1);
+      if (lowMatch)  lowRisks  = (lowMatch[0].match(/<div[^>]*class=["'][^"']*finding|<li[\s>]/gi) || []).length || Math.max(0, (lowMatch[0].match(/<p>/gi) || []).length - 1);
+    }
+
+    // Strategy 3: styled border colours as proxies
+    if (highRisks + medRisks + lowRisks === 0) {
+      highRisks = (reportHtml.match(/border-left[^;]*(?:#e74c3c|#c0392b|#c62828|red)/gi) || []).length;
+      medRisks  = (reportHtml.match(/border-left[^;]*(?:#e67e22|#f39c12|orange)/gi) || []).length;
+      lowRisks  = (reportHtml.match(/border-left[^;]*(?:#27ae60|#2ecc71|green)/gi) || []).length;
+    }
+  } catch (e) {
+    console.warn('parseRiskCountsFromHtml error:', e.message);
+  }
+
+  // Minimum 1 per section if heading exists
+  if (highRisks === 0 && /HIGH RISK/i.test(reportHtml)) highRisks = 1;
+  if (medRisks  === 0 && /MEDIUM RISK/i.test(reportHtml)) medRisks  = 1;
+  if (lowRisks  === 0 && /LOW RISK/i.test(reportHtml)) lowRisks  = 1;
+
+  // Final fallback: rule engine
+  if (highRisks + medRisks + lowRisks === 0 && allFindings && allFindings.length > 0) {
+    highRisks = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'HIGH').length, 0);
+    medRisks  = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'MEDIUM').length, 0);
+    lowRisks  = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'LOW').length, 0);
+  }
+
+  console.log('Risk counts — HIGH:', highRisks, 'MED:', medRisks, 'LOW:', lowRisks);
   return { highRisks, medRisks, lowRisks, total: highRisks + medRisks + lowRisks };
 }
 
