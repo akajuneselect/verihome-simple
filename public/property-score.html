@@ -189,9 +189,98 @@
   svg.ring { transform: rotate(-90deg); }
   .ring-bg { fill: none; stroke: rgba(255,255,255,.15); stroke-width: 6; }
   .ring-fg { fill: none; stroke: white; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 283; stroke-dashoffset: 283; transition: stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1); }
+
+  /* ── GATE MODAL ── */
+  .gate-overlay {
+    position: fixed; inset: 0; background: rgba(15,30,50,.72);
+    backdrop-filter: blur(4px); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; opacity: 0; transition: opacity .25s;
+  }
+  .gate-overlay.show { opacity: 1; }
+  .gate-box {
+    background: white; border-radius: 16px; padding: 36px 32px;
+    max-width: 460px; width: 100%; box-shadow: 0 24px 80px rgba(0,0,0,.25);
+    transform: translateY(20px); transition: transform .3s ease;
+  }
+  .gate-overlay.show .gate-box { transform: translateY(0); }
+  .gate-icon { font-size: 2.8rem; text-align: center; margin-bottom: 8px; }
+  .gate-title { font-size: 1.35rem; font-weight: 800; color: var(--brand); text-align: center; margin-bottom: 6px; }
+  .gate-sub { font-size: 0.88rem; color: var(--muted); text-align: center; margin-bottom: 24px; line-height: 1.55; }
+  .gate-sub strong { color: var(--brand); }
+  .gate-label { font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 6px; display: block; }
+  .gate-input {
+    width: 100%; padding: 12px 14px; border: 2px solid var(--border);
+    border-radius: 9px; font-size: 0.95rem; font-family: inherit;
+    outline: none; transition: border .2s; margin-bottom: 14px; color: var(--text);
+  }
+  .gate-input:focus { border-color: var(--brand); }
+  .gate-input.error { border-color: var(--danger); }
+  .gate-purpose-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px;
+  }
+  .purpose-btn {
+    padding: 10px 8px; border: 2px solid var(--border); border-radius: 9px;
+    background: white; cursor: pointer; font-size: 0.82rem; font-weight: 600;
+    color: var(--text); text-align: center; transition: all .15s; line-height: 1.3;
+    font-family: inherit;
+  }
+  .purpose-btn:hover { border-color: var(--brand); background: var(--brand-light); color: var(--brand); }
+  .purpose-btn.selected { border-color: var(--brand); background: var(--brand); color: white; }
+  .purpose-btn .pb-icon { font-size: 1.3rem; display: block; margin-bottom: 3px; }
+  .gate-submit {
+    width: 100%; padding: 14px; background: var(--brand); color: white;
+    border: none; border-radius: 10px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; font-family: inherit; transition: background .2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gate-submit:hover { background: #234e78; }
+  .gate-submit:disabled { background: #9ab0c8; cursor: not-allowed; }
+  .gate-privacy { font-size: 0.73rem; color: var(--muted); text-align: center; margin-top: 10px; }
+  .gate-privacy a { color: var(--brand); }
+  .gate-err { font-size: 0.8rem; color: var(--danger); margin-top: -10px; margin-bottom: 10px; display: none; }
+  .gate-err.show { display: block; }
+  .score-blur { filter: blur(6px); pointer-events: none; user-select: none; transition: filter .4s; }
 </style>
 </head>
 <body>
+
+<!-- ── GATE MODAL ─────────────────────────────────────────── -->
+<div class="gate-overlay" id="gateOverlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gate-box">
+    <div class="gate-icon">🏠</div>
+    <h2 class="gate-title" id="gateTitle">Your Score is Ready!</h2>
+    <p class="gate-sub">Enter your email to unlock the full AI report.<br><strong>Free — no credit card needed.</strong></p>
+
+    <label class="gate-label" for="gateEmail">Email address</label>
+    <input class="gate-input" type="email" id="gateEmail" placeholder="you@example.com" autocomplete="email" />
+    <div class="gate-err" id="gateEmailErr">Please enter a valid email address.</div>
+
+    <label class="gate-label">What's your main reason for checking this property?</label>
+    <div class="gate-purpose-grid">
+      <button class="purpose-btn" data-val="buying_home" onclick="selectPurpose(this)">
+        <span class="pb-icon">🏡</span>Buying to live in
+      </button>
+      <button class="purpose-btn" data-val="investment" onclick="selectPurpose(this)">
+        <span class="pb-icon">📈</span>Investment / rental
+      </button>
+      <button class="purpose-btn" data-val="researching" onclick="selectPurpose(this)">
+        <span class="pb-icon">🔍</span>Just researching
+      </button>
+      <button class="purpose-btn" data-val="other" onclick="selectPurpose(this)">
+        <span class="pb-icon">💬</span>Other
+      </button>
+    </div>
+    <div class="gate-err" id="gatePurposeErr">Please select a reason above.</div>
+
+    <button class="gate-submit" id="gateSubmitBtn" onclick="submitGate()">
+      🔓 Unlock My Property Score
+    </button>
+    <p class="gate-privacy">No spam, ever. By continuing you agree to our <a href="/privacy.html" target="_blank">Privacy Policy</a>.</p>
+  </div>
+</div>
+<!-- ───────────────────────────────────────────────────────── -->
+
 
 <nav>
   <a href="https://www.verihome.co.nz" class="logo">Veri<span>home</span> NZ</a>
@@ -363,7 +452,7 @@ async function scoreProperty() {
     }
 
     endProgress();
-    renderResults(data);
+    showGate(data);
 
   } catch (err) {
     endProgress();
@@ -504,6 +593,94 @@ function copyScore(score, title) {
     setTimeout(() => { btn.textContent = '📋 Copy Score'; btn.classList.remove('copied'); }, 2000);
   });
 }
+
+
+// ── Gate logic ────────────────────────────────────────────────────────────────
+let pendingResultData = null;
+let selectedPurpose = null;
+
+function selectPurpose(btn) {
+  document.querySelectorAll('.purpose-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedPurpose = btn.dataset.val;
+  document.getElementById('gatePurposeErr').classList.remove('show');
+}
+
+function showGate(data) {
+  pendingResultData = data;
+  const overlay = document.getElementById('gateOverlay');
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('show'));
+  setTimeout(() => document.getElementById('gateEmail').focus(), 300);
+}
+
+function hideGate() {
+  const overlay = document.getElementById('gateOverlay');
+  overlay.classList.remove('show');
+  setTimeout(() => { overlay.style.display = 'none'; }, 250);
+}
+
+async function submitGate() {
+  const emailVal = document.getElementById('gateEmail').value.trim();
+  const emailErr = document.getElementById('gateEmailErr');
+  const purposeErr = document.getElementById('gatePurposeErr');
+  const btn = document.getElementById('gateSubmitBtn');
+
+  // Validate
+  let valid = true;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+    emailErr.classList.add('show');
+    document.getElementById('gateEmail').classList.add('error');
+    valid = false;
+  } else {
+    emailErr.classList.remove('show');
+    document.getElementById('gateEmail').classList.remove('error');
+  }
+  if (!selectedPurpose) {
+    purposeErr.classList.add('show');
+    valid = false;
+  }
+  if (!valid) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  // Send lead to backend
+  try {
+    await fetch('/api/property-score-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: emailVal,
+        purpose: selectedPurpose,
+        propertyInput: document.getElementById('propertyInput').value.trim(),
+        overallScore: pendingResultData?.overallScore,
+        propertyTitle: pendingResultData?.propertyTitle,
+        timestamp: new Date().toISOString(),
+      })
+    });
+  } catch(e) {
+    // Don't block the user if lead save fails
+    console.warn('Lead save failed:', e.message);
+  }
+
+  hideGate();
+  renderResults(pendingResultData);
+  pendingResultData = null;
+}
+
+// Close gate on overlay click (outside box)
+document.getElementById('gateOverlay').addEventListener('click', function(e) {
+  if (e.target === this) {
+    // Don't close — we want the email
+  }
+});
+
+// Enter key in email field
+document.getElementById('gateEmail').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') submitGate();
+});
+
 </script>
 </body>
 </html>
