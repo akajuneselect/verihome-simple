@@ -194,10 +194,10 @@
   .gate-overlay {
     position: fixed; inset: 0; background: rgba(15,30,50,.72);
     backdrop-filter: blur(4px); z-index: 9999;
-    display: flex; align-items: center; justify-content: center;
+    display: none; align-items: center; justify-content: center;
     padding: 20px; opacity: 0; transition: opacity .25s;
   }
-  .gate-overlay.show { opacity: 1; }
+  .gate-overlay.show { display: flex; opacity: 1; }
   .gate-box {
     background: white; border-radius: 16px; padding: 36px 32px;
     max-width: 460px; width: 100%; box-shadow: 0 24px 80px rgba(0,0,0,.25);
@@ -610,7 +610,6 @@ function selectPurpose(btn) {
 function showGate(data) {
   pendingResultData = data;
   const overlay = document.getElementById('gateOverlay');
-  overlay.style.display = 'flex';
   requestAnimationFrame(() => overlay.classList.add('show'));
   setTimeout(() => document.getElementById('gateEmail').focus(), 300);
 }
@@ -618,7 +617,7 @@ function showGate(data) {
 function hideGate() {
   const overlay = document.getElementById('gateOverlay');
   overlay.classList.remove('show');
-  setTimeout(() => { overlay.style.display = 'none'; }, 250);
+  setTimeout(() => { overlay.classList.remove('show'); }, 0);
 }
 
 async function submitGate() {
