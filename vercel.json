@@ -1,31 +1,21 @@
 {
   "version": 2,
   "functions": {
-    "api/legal-webhook.js": {
-      "maxDuration": 60
-    },
-    "api/property-score.js": {
-      "maxDuration": 30
-    }
+    "api/legal-webhook.js": { "maxDuration": 60 },
+    "api/property-score.js": { "maxDuration": 30 },
+    "api/property-score-lead.js": { "maxDuration": 15 }
   },
   "routes": [
-    {
-      "src": "/property-score",
-      "dest": "/property-score.html"
-    }
+    { "src": "/property-score", "dest": "/property-score.html" }
   ],
   "headers": [
     {
       "source": "/(.*).html",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
     },
     {
       "source": "/",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
     },
     {
       "source": "/api/(.*)",
