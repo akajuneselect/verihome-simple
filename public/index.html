@@ -631,24 +631,202 @@
   </div>
 
   <!-- SAMPLE REPORT -->
-  <section class="section" style="background:var(--gray-50);">
-    <div class="section-inner" style="max-width:860px;text-align:center;">
-      <div class="section-label">Transparency</div>
-      <h2 class="section-title">See a Sample Report Before You Buy</h2>
-      <p class="section-sub" style="margin:0 auto 2rem;">Not sure what you&rsquo;ll receive? We believe in full transparency. Download a real sample report so you know exactly what to expect before making any payment.</p>
-      <div style="background:var(--white);border:2px dashed var(--gray-200);border-radius:var(--radius);padding:3rem 2rem;display:inline-block;min-width:320px;">
-        <div style="font-size:3rem;margin-bottom:1rem;">&#128196;</div>
-        <div style="font-weight:700;color:var(--gray-800);font-size:1.05rem;margin-bottom:0.5rem;">Sample Property Analysis Report</div>
-        <div style="color:var(--gray-600);font-size:0.875rem;margin-bottom:1.5rem;">Complete Analysis &mdash; Example LIM + Building Report</div>
-        <div style="background:var(--gray-200);color:var(--gray-600);padding:10px 28px;border-radius:8px;font-weight:600;font-size:0.9rem;display:inline-block;cursor:not-allowed;">
-          Coming Soon
+<section class="section" style="background:var(--gray-50);" id="sample-report">
+<div class="section-inner" style="max-width:900px;">
+  <div style="text-align:center;margin-bottom:2.5rem;">
+    <div class="section-label">Transparency</div>
+    <h2 class="section-title">See a Real Report Before You Buy</h2>
+    <p class="section-sub" style="margin:0 auto;">This is exactly what you receive. Every finding is written in plain English — no jargon, no fluff.</p>
+  </div>
+
+  <!-- REPORT CARD -->
+  <div style="background:white;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,0.10);overflow:hidden;border:1px solid var(--gray-200);position:relative;">
+
+    <!-- SAMPLE WATERMARK -->
+    <div style="position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden;border-radius:14px;">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:5rem;font-weight:900;color:rgba(26,60,94,0.05);white-space:nowrap;letter-spacing:8px;user-select:none;">SAMPLE</div>
+    </div>
+
+    <!-- REPORT HEADER -->
+    <div style="background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 100%);color:white;padding:28px 32px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+      <div>
+        <div style="font-size:1.35rem;font-weight:800;margin-bottom:4px;">Property Legal Risk Review</div>
+        <div style="opacity:0.85;font-size:0.95rem;margin-bottom:12px;">📍 42 Rimu Street, Papakura, Auckland 2110</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:3px 11px;font-size:0.75rem;">🏠 Freehold Title</span>
+          <span style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:3px 11px;font-size:0.75rem;">📐 642 m²</span>
+          <span style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:3px 11px;font-size:0.75rem;">🏗️ 1978 Build</span>
+          <span style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:3px 11px;font-size:0.75rem;">Complete Analysis</span>
         </div>
-        <div style="color:var(--gray-600);font-size:0.78rem;margin-top:0.75rem;">Available shortly &mdash; check back soon</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:1.1rem;font-weight:900;letter-spacing:-0.5px;">Veri<span style="color:#7ec8e3;">home</span></div>
+        <div style="opacity:0.7;font-size:0.8rem;margin-top:3px;">Report #VH-2026-04831</div>
       </div>
     </div>
-  </section>
 
-  <!-- WHY WE BUILT THIS -->
+    <!-- RISK SCORECARD -->
+    <div style="padding:22px 32px;border-bottom:1px solid var(--gray-200);background:white;">
+      <div style="font-size:0.75rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">Risk Scorecard</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div style="background:var(--gray-50);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--gray-200);">
+          <div style="font-size:2rem;font-weight:900;color:var(--danger);">1</div>
+          <div style="font-size:0.72rem;color:var(--gray-600);margin-top:3px;font-weight:600;text-transform:uppercase;">🔴 High Risk</div>
+        </div>
+        <div style="background:var(--gray-50);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--gray-200);">
+          <div style="font-size:2rem;font-weight:900;color:var(--warning);">3</div>
+          <div style="font-size:0.72rem;color:var(--gray-600);margin-top:3px;font-weight:600;text-transform:uppercase;">🟡 Medium Risk</div>
+        </div>
+        <div style="background:var(--gray-50);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--gray-200);">
+          <div style="font-size:2rem;font-weight:900;color:var(--safe);">4</div>
+          <div style="font-size:0.72rem;color:var(--gray-600);margin-top:3px;font-weight:600;text-transform:uppercase;">🟢 Low / Info</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXECUTIVE SUMMARY -->
+    <div style="padding:22px 32px;border-bottom:1px solid var(--gray-200);background:white;">
+      <div style="font-size:0.75rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Executive Summary</div>
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="font-size:2rem;flex-shrink:0;">⚠️</div>
+        <div>
+          <div style="font-weight:800;font-size:1.05rem;color:var(--warning);margin-bottom:6px;">Proceed with Caution — 3 Issues Require Attention Before Settlement</div>
+          <p style="color:var(--gray-600);font-size:0.88rem;line-height:1.7;">Our AI analysis of your title deed, LIM report, and Sale &amp; Purchase Agreement has identified <strong>3 medium-risk findings</strong> and <strong>1 high-risk item</strong> that should be discussed with your conveyancing solicitor before you sign unconditionally. No deal-breakers were found, but the unpermitted deck addition and the drainage easement on the rear boundary carry real financial implications if not addressed at negotiation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TITLE DEED FINDINGS -->
+    <div style="padding:22px 32px;border-bottom:1px solid var(--gray-200);background:white;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;background:#fef9e7;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">📋</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;color:var(--gray-800);">Title Deed Analysis</div>
+            <div style="font-size:0.75rem;color:var(--gray-600);">Certificate of Title — NA45C/123</div>
+          </div>
+        </div>
+        <span style="background:rgba(243,156,18,0.15);color:var(--warning);padding:3px 10px;border-radius:12px;font-size:0.72rem;font-weight:700;text-transform:uppercase;">Medium Risk</span>
+      </div>
+
+      <div class="ai-finding MEDIUM" style="margin-bottom:10px;">
+        <div class="ai-finding-header">
+          <span class="risk-badge MEDIUM">Medium</span>
+          <h4>🟡 Drainage Easement on Rear Boundary (Instrument D459821)</h4>
+        </div>
+        <p class="issue">The title shows a registered drainage easement running 1.8 metres along the full rear boundary in favour of Auckland Council. <strong>This restricts any future construction, landscaping, or permanent structures</strong> within that strip — including fences, garden beds with deep foundations, or a potential sleep-out or granny flat.</p>
+        <div class="recommendation">💡 <strong>Recommendation:</strong> Ask your solicitor to request a current drainage plan from Auckland Council to confirm the exact pipe depth and dimensions before going unconditional. If adding a rear dwelling is part of your plan, factor this constraint into your offer price.</div>
+      </div>
+
+      <div class="ai-finding LOW">
+        <div class="ai-finding-header">
+          <span class="risk-badge LOW">Low</span>
+          <h4>🟢 Dormant Right of Way — Registered Access Easement</h4>
+        </div>
+        <p class="issue">A historical right of way is registered in favour of the neighbouring property for pedestrian access across the front left corner. <strong>This easement appears dormant</strong> — the neighbouring property gained its own frontage when the road was widened in 1994.</p>
+        <div class="recommendation">💡 <strong>Recommendation:</strong> Your solicitor should confirm in writing that this easement is no longer exercised and explore extinguishment. Low cost, high title clarity benefit for future resale.</div>
+      </div>
+    </div>
+
+    <!-- LIM REPORT FINDINGS -->
+    <div style="padding:22px 32px;border-bottom:1px solid var(--gray-200);background:white;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;background:#eaf4fb;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">🏛️</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;color:var(--gray-800);">LIM Report Analysis</div>
+            <div style="font-size:0.75rem;color:var(--gray-600);">Land Information Memorandum — Auckland Council</div>
+          </div>
+        </div>
+        <span style="background:rgba(231,76,60,0.12);color:var(--danger);padding:3px 10px;border-radius:12px;font-size:0.72rem;font-weight:700;text-transform:uppercase;">High Risk</span>
+      </div>
+
+      <div class="ai-finding HIGH" style="margin-bottom:10px;">
+        <div class="ai-finding-header">
+          <span class="risk-badge HIGH">High</span>
+          <h4>🔴 Unpermitted Deck Addition — No Building Consent on Record</h4>
+        </div>
+        <p class="issue">The LIM confirms <strong>no building consent was issued for the rear timber deck</strong> (approx. 40 m²). Auckland Council records show consents for the original 1978 dwelling and a 1994 re-roofing, but nothing for any deck structure. Under the Building Act 2004, structures of this size require consent. Risks include: (1) Council may issue a notice to fix — demolition or retrospective consent can cost <strong>$8,000–$25,000</strong>; (2) home insurer may decline claims from the deck area; (3) your bank's valuer may flag this, potentially affecting your mortgage approval.</p>
+        <div class="recommendation">💡 <strong>Recommendation:</strong> Require the vendor to obtain a Certificate of Acceptance from Auckland Council prior to settlement, or negotiate a <strong>price reduction of $15,000–$25,000</strong> to cover your costs as new owner. Do not go unconditional until this is resolved.</div>
+        <div class="cost">💰 Estimated cost if unresolved: $8,000–$25,000 (retrospective consent or removal)</div>
+      </div>
+
+      <div class="ai-finding MEDIUM">
+        <div class="ai-finding-header">
+          <span class="risk-badge MEDIUM">Medium</span>
+          <h4>🟡 Historic Flooding Notation — 1% AEP Flood Zone Margin</h4>
+        </div>
+        <p class="issue">The LIM notes that the rear 12% of the section (~77 m²) falls within Auckland Council's 1-in-100-year flood extent. <strong>The dwelling itself sits above the mapped flood line</strong>, but the notation restricts rear construction and may increase insurance premiums.</p>
+        <div class="recommendation">💡 <strong>Recommendation:</strong> Obtain flood insurance quotes before going unconditional and factor any premium increase into your total cost of ownership. This notation must also be disclosed in any future sale.</div>
+      </div>
+    </div>
+
+    <!-- S&P AGREEMENT — BLURRED -->
+    <div style="padding:22px 32px;background:white;position:relative;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;background:#eafaf1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">📝</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;color:var(--gray-800);">Sale &amp; Purchase Agreement Review</div>
+            <div style="font-size:0.75rem;color:var(--gray-600);">ADLS/REINZ Standard Form — 9th Edition</div>
+          </div>
+        </div>
+        <span style="background:rgba(243,156,18,0.15);color:var(--warning);padding:3px 10px;border-radius:12px;font-size:0.72rem;font-weight:700;text-transform:uppercase;">Medium Risk</span>
+      </div>
+      <!-- Blurred findings -->
+      <div style="filter:blur(5px);user-select:none;pointer-events:none;opacity:0.65;">
+        <div class="ai-finding MEDIUM" style="margin-bottom:10px;">
+          <div class="ai-finding-header"><span class="risk-badge MEDIUM">Medium</span><h4>Finance Condition Wording Does Not Cover Valuation Shortfall</h4></div>
+          <p class="issue">The finance condition does not specify a minimum approved loan amount. If your bank approves less than required due to a low registered valuation — a real risk given the unpermitted deck — the condition as written may not allow you to cancel.</p>
+          <div class="recommendation">💡 Amend to specify a minimum approved loan amount before signing.</div>
+        </div>
+        <div class="ai-finding LOW">
+          <div class="ai-finding-header"><span class="risk-badge LOW">Low</span><h4>Vendor Seeking Early Deposit Release</h4></div>
+          <p class="issue">A vendor-inserted special condition requests release of the 10% deposit upon satisfaction of all conditions, rather than holding until settlement. This exposes you if the vendor becomes insolvent before settlement.</p>
+        </div>
+      </div>
+      <!-- Upgrade overlay -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:220px;background:linear-gradient(to bottom,rgba(248,250,252,0) 0%,rgba(248,250,252,0.95) 45%,rgba(248,250,252,1) 100%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:28px;">
+        <div style="text-align:center;">
+          <div style="font-weight:800;font-size:1rem;color:var(--primary);margin-bottom:4px;">🔒 2 More S&amp;P Findings in Full Report</div>
+          <div style="color:var(--gray-600);font-size:0.82rem;margin-bottom:12px;">Plus negotiation script and exact clauses to add to your contract.</div>
+          <a href="#pricing" class="btn-primary" style="display:inline-flex;text-decoration:none;font-size:0.9rem;padding:10px 22px;">Unlock Full Report from $29 →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECOMMENDED NEXT STEPS -->
+    <div style="padding:22px 32px;background:var(--gray-50);border-top:1px solid var(--gray-200);">
+      <div style="font-size:0.75rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">Recommended Next Steps</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+        <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:var(--gray-700);">
+          <span style="font-size:1rem;flex-shrink:0;margin-top:1px;">🔴</span>
+          <div><strong style="color:var(--gray-800);">Require vendor to resolve unpermitted deck (Priority: HIGH)</strong><br>Ask the vendor to obtain a Certificate of Acceptance or negotiate a price reduction of $15,000–$25,000 before going unconditional.</div>
+        </li>
+        <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:var(--gray-700);">
+          <span style="font-size:1rem;flex-shrink:0;margin-top:1px;">🟡</span>
+          <div><strong style="color:var(--gray-800);">Ask solicitor to investigate dormant right of way</strong><br>Seek written confirmation and initiate extinguishment. Low cost, high title clarity benefit.</div>
+        </li>
+        <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:var(--gray-700);">
+          <span style="font-size:1rem;flex-shrink:0;margin-top:1px;">🟢</span>
+          <div><strong style="color:var(--gray-800);">Obtain flood insurance quotes before going unconditional</strong><br>Factor any premium increase into your ongoing costs before committing.</div>
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- /report card -->
+
+  <!-- CTA below report -->
+  <div style="text-align:center;margin-top:2rem;">
+    <p style="color:var(--gray-600);font-size:0.9rem;margin-bottom:1.25rem;">Ready to get this level of analysis for your own property?</p>
+    <a href="#pricing" class="btn-primary" style="display:inline-flex;text-decoration:none;">📄 Get My Full Report →</a>
+    <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--gray-600);">From $29 NZD · Same-day delivery · Plain English · NZ law context</div>
+  </div>
+
+</div>
+</section>
+
+<!-- WHY WE BUILT THIS -->
   <section class="section" style="background:var(--primary-dark);">
     <div class="section-inner" style="max-width:860px;">
       <div style="display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:center;">
