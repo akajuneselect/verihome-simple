@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Property Buying Guides NZ | Verihome Blog</title>
+  <meta name="description" content="Free guides for NZ property buyers. Learn what to look for in LIM reports, sale and purchase agreements, builder's reports, and more.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.verihome.co.nz/blog/">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Property Buying Guides NZ | Verihome Blog">
+  <meta property="og:description" content="Free guides for NZ property buyers — LIM reports, S&P agreements, builder's reports and more.">
+  <meta property="og:url" content="https://www.verihome.co.nz/blog/">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0a2540;
+      --accent: #00c4cc;
+      --safe: #00b894;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #2d3748;
+      --muted: #718096;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+    /* NAV */
+    nav {
+      background: var(--primary);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo { color: white; font-weight: 800; font-size: 1.25rem; text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: white; }
+    .nav-cta {
+      background: var(--accent);
+      color: var(--primary) !important;
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700 !important;
+      font-size: 0.85rem !important;
+    }
+
+    /* HERO */
+    .blog-hero {
+      background: var(--primary);
+      color: white;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+    .blog-hero .eyebrow {
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .blog-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2; }
+    .blog-hero p { color: rgba(255,255,255,0.75); font-size: 1.1rem; max-width: 560px; margin: 0 auto; }
+
+    /* ARTICLES GRID */
+    .blog-container { max-width: 1100px; margin: 0 auto; padding: 4rem 2rem; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .article-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--text);
+      transition: box-shadow 0.2s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .article-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.12); transform: translateY(-2px); }
+    .article-card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+    .article-tag {
+      display: inline-block;
+      background: rgba(0,196,204,0.1);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+    }
+    .article-card h2 { font-size: 1.1rem; font-weight: 700; line-height: 1.4; margin-bottom: 0.75rem; color: var(--primary); }
+    .article-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; flex: 1; }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .read-time { display: flex; align-items: center; gap: 0.3rem; }
+
+    /* FEATURED */
+    .article-card.featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+    }
+    .article-card.featured .article-card-img {
+      width: 280px;
+      min-height: 200px;
+      background: linear-gradient(135deg, var(--primary) 0%, #1a4a7a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      flex-shrink: 0;
+    }
+    .article-card.featured .article-card-body { padding: 2rem; }
+    .article-card.featured h2 { font-size: 1.4rem; }
+
+    /* CTA BANNER */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--primary) 0%, #1a4a7a 100%);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+      margin-top: 4rem;
+    }
+    .cta-banner h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.75rem; }
+    .cta-banner p { color: rgba(255,255,255,0.75); margin-bottom: 1.5rem; }
+    .btn-accent {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--primary);
+      font-weight: 700;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--primary);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.85rem;
+      margin-top: 4rem;
+    }
+    footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+
+    @media (max-width: 768px) {
+      .blog-hero h1 { font-size: 1.8rem; }
+      .article-card.featured { flex-direction: column; }
+      .article-card.featured .article-card-img { width: 100%; height: 140px; }
+      .nav-links { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Veri<span>home</span></a>
+  <div class="nav-links">
+    <a href="/#how-it-works">How it works</a>
+    <a href="/#services">Services</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/property-score.html" style="color:var(--accent);font-weight:700;">✨ Free Score</a>
+    <a href="/blog/" style="color:var(--accent);font-weight:700;">📚 Blog</a>
+    <a href="/#contact" class="nav-cta">Free Preview →</a>
+  </div>
+</nav>
+
+<div class="blog-hero">
+  <div class="eyebrow">Verihome Guides</div>
+  <h1>Property Buying Guides for NZ</h1>
+  <p>Plain-English guides to help you navigate LIM reports, S&P agreements, builder's reports, and every other hurdle in the NZ property buying process.</p>
+</div>
+
+<div class="blog-container">
+  <div class="section-label">All Guides</div>
+  <div class="articles-grid">
+
+    <!-- FEATURED: LIM Report -->
+    <a href="/blog/lim-report-nz-guide.html" class="article-card featured">
+      <div class="article-card-img">📋</div>
+      <div class="article-card-body">
+        <span class="article-tag">LIM Report</span>
+        <h2>What to Look for in a LIM Report NZ — The Complete Buyer's Guide</h2>
+        <p>A Land Information Memorandum (LIM) contains critical council records about a property. Most buyers skim it. This guide shows you exactly what red flags to look for — unpermitted work, flood zones, drainage issues, and more — before you sign anything.</p>
+        <div class="article-meta">
+          <span class="read-time">⏱ 8 min read</span>
+          <span>·</span>
+          <span>May 2025</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- S&P Agreement -->
+    <a href="/blog/sale-and-purchase-agreement-nz-risks.html" class="article-card">
+      <div class="article-card-body">
+        <span class="article-tag">S&P Agreement</span>
+        <h2>NZ Sale and Purchase Agreement: 10 Risks First-Home Buyers Miss</h2>
+        <p>The S&P agreement is a legally binding contract — and it's full of clauses that can cost you thousands if you don't know what you're agreeing to. Here's what to watch out for.</p>
+        <div class="article-meta">
+          <span class="read-time">⏱ 7 min read</span>
+          <span>·</span>
+          <span>Coming soon</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Builder's Report -->
+    <a href="/blog/builders-report-nz-guide.html" class="article-card">
+      <div class="article-card-body">
+        <span class="article-tag">Builder's Report</span>
+        <h2>Builder's Report NZ: What It Covers (And What It Doesn't)</h2>
+        <p>A builder's report isn't a guarantee — it's a snapshot. Learn what to expect, how to choose a good inspector, and the questions you must ask after you get the report.</p>
+        <div class="article-meta">
+          <span class="read-time">⏱ 6 min read</span>
+          <span>·</span>
+          <span>Coming soon</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Unpermitted Work -->
+    <a href="/blog/unpermitted-building-work-nz.html" class="article-card">
+      <div class="article-card-body">
+        <span class="article-tag">Due Diligence</span>
+        <h2>How to Check for Unpermitted Building Work When Buying in NZ</h2>
+        <p>Unpermitted additions and alterations are one of the most common — and costly — issues in NZ property. Here's how to spot them before you buy.</p>
+        <div class="article-meta">
+          <span class="read-time">⏱ 5 min read</span>
+          <span>·</span>
+          <span>Coming soon</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- First Home Buyer Checklist -->
+    <a href="/blog/first-home-buyer-checklist-nz.html" class="article-card">
+      <div class="article-card-body">
+        <span class="article-tag">First Home Buyers</span>
+        <h2>The Ultimate First Home Buyer's Checklist for New Zealand (2025)</h2>
+        <p>Everything you need to do — and check — from pre-approval to settlement. A step-by-step checklist built for the NZ market.</p>
+        <div class="article-meta">
+          <span class="read-time">⏱ 10 min read</span>
+          <span>·</span>
+          <span>Coming soon</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="cta-banner">
+    <h2>Not sure about a property? Get an instant AI score.</h2>
+    <p>Enter any NZ property address and get a risk-rated score across 6 dimensions — for free.</p>
+    <a href="/property-score.html" class="btn-accent">✨ Score This Property Free →</a>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Verihome NZ · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/disclaimer.html">Disclaimer</a></p>
+</footer>
+
+</body>
+</html>
