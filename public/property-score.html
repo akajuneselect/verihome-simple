@@ -17,7 +17,7 @@
     --muted: #7f8c8d;
     --border: #dde3ea;
     --radius: 12px;
-    --shadow: 0 4px 24px rgba(26,60,94,0.10);
+    --shadow: 0 4px 24px rgba(26,60,94,0.10);h
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f7fb; color: var(--text); min-height: 100vh; }
@@ -565,7 +565,7 @@ function renderResults(data) {
 
     <div class="share-row">
       <button class="share-btn" onclick="copyScore('${overall.toFixed(1)}', '${data.propertyTitle}')">📋 Copy Score</button>
-      <a class="share-btn" href="https://www.verihome.co.nz" target="_blank">🌐 Visit Verihome</a>
+      <a class="share-btn" href="https://api.whatsapp.com/send?text=" onclick="shareWhatsApp('${overall.toFixed(1)}','${data.propertyTitle}')">💬 WhatsApp</a> <a class="share-btn share-facebook" href="javascript:void(0)" onclick="shareFacebook()">👍 Facebook</a> <a class="share-btn share-twitter" href="javascript:void(0)" onclick="shareTwitter('${overall.toFixed(1)}','${data.propertyTitle}')">🐦 Twitter</a>🌐 Visit Verihome</a>
     </div>
   `;
 
@@ -591,7 +591,7 @@ function copyScore(score, title) {
     const btn = event.target;
     btn.textContent = '✅ Copied!';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '📋 Copy Score'; btn.classList.remove('copied'); }, 2000);
+    setTimeout(() => { btn.textContent = '📋 Copy Score'; btn.classList.remove('copied'); }, 2000);  }  function shareWhatsApp(score, title) { const text = encodeURIComponent('I got ' + score + '/10 on my NZ property AI Score! Check yours free: https://www.verihome.co.nz/property-score'); window.open('https://api.whatsapp.com/send?text=' + text, '_blank'); }  function shareFacebook() { window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://www.verihome.co.nz/property-score'), '_blank'); }  function shareTwitter(score, title) { const text = encodeURIComponent('My NZ property AI Score: ' + score + '/10! Get yours free at Verihome NZ https://www.verihome.co.nz/property-score'); window.open('https://twitter.com/intent/tweet?text=' + text, '_blank'); }
   });
 }
 
