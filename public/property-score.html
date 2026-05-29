@@ -591,7 +591,7 @@ function copyScore(score, title) {
     const btn = event.target;
     btn.textContent = '✅ Copied!';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '📋 Copy Score'; btn.classList.remove('copied'); }, 2000);  }  function shareWhatsApp(score, title) { const text = encodeURIComponent('I got ' + score + '/10 on my NZ property AI Score! Check yours free: https://www.verihome.co.nz/property-score'); window.open('https://api.whatsapp.com/send?text=' + text, '_blank'); }  function shareFacebook() { window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://www.verihome.co.nz/property-score'), '_blank'); }  function shareTwitter(score, title) { const text = encodeURIComponent('My NZ property AI Score: ' + score + '/10! Get yours free at Verihome NZ https://www.verihome.co.nz/property-score'); window.open('https://twitter.com/intent/tweet?text=' + text, '_blank'); }
+    setTimeout(() => { btn.textContent = '📋 Copy Score'; btn.classList.remove('copied'); }, 2000);    function shareWhatsApp(score, title) { const text = encodeURIComponent('I got ' + score + '/10 on my NZ property AI Score! Check yours free: https://www.verihome.co.nz/property-score'); window.open('https://api.whatsapp.com/send?text=' + text, '_blank'); }  function shareFacebook() { window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://www.verihome.co.nz/property-score'), '_blank'); }  function shareTwitter(score, title) { const text = encodeURIComponent('My NZ property AI Score: ' + score + '/10! Get yours free at Verihome NZ https://www.verihome.co.nz/property-score'); window.open('https://twitter.com/intent/tweet?text=' + text, '_blank'); }
   });
 }
 
