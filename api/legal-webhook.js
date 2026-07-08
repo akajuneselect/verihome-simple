@@ -122,7 +122,7 @@ async function handleLegalConsultationPayment(session) {
         metadata: session.metadata || {},
   };
 
-  // ── Idempotency: skip everything if order already exists in DB ──────────────
+  // ââ Idempotency: skip everything if order already exists in DB ââââââââââââââ
   try {
     const { data: existingOrder } = await supabase
       .from('orders')
@@ -130,18 +130,18 @@ async function handleLegalConsultationPayment(session) {
       .eq('stripe_session_id', session.id)
       .single();
     if (existingOrder) {
-      console.log('Idempotent skip — order already processed:', session.id, '| status:', existingOrder.status);
+      console.log('Idempotent skip â order already processed:', session.id, '| status:', existingOrder.status);
       return;
     }
   } catch (e) {
-    // .single() throws if no row — that's fine, means order is new
+    // .single() throws if no row â that's fine, means order is new
   }
 
   // 1. Save order to Supabase
   const saved = await saveOrderToSupabase(record);
   if (saved === null) {
-    // Duplicate race condition — another webhook invocation already saved it
-    console.log('Duplicate insert race — aborting emails for session:', session.id);
+    // Duplicate race condition â another webhook invocation already saved it
+    console.log('Duplicate insert race â aborting emails for session:', session.id);
     return;
   }
 
@@ -165,10 +165,10 @@ async function handleLegalConsultationPayment(session) {
       });
     } catch (err) {
       console.error('Report generation failed:', err.message);
-      // Don't fail the whole webhook — order is saved, confirmation sent
+      // Don't fail the whole webhook â order is saved, confirmation sent
     }
   } else {
-    console.warn('No file_keys in metadata — cannot generate report for session:', session.id);
+    console.warn('No file_keys in metadata â cannot generate report for session:', session.id);
   }
 }
 
@@ -247,7 +247,7 @@ async function generateAndSendReport({ customerEmail, customerName, packageType,
     essential: {
       model: 'gpt-4o-mini',
       max_tokens: 2500,
-      systemPrompt: `You are a New Zealand property law analyst. Analyse property documents for a homebuyer and produce a clear, professional risk report. Reference NZ legislation where relevant (Property Law Act 2007, Building Act 2004, Unit Titles Act 2010, Resource Management Act 1991). Write for a non-lawyer buyer. Be concise but thorough — each finding must include a clear explanation of WHY it matters, what could go wrong, and exactly what the buyer should do.`,
+      systemPrompt: `You are a New Zealand property law analyst. Analyse property documents for a homebuyer and produce a clear, professional risk report. Reference NZ legislation where relevant (Property Law Act 2007, Building Act 2004, Unit Titles Act 2010, Resource Management Act 1991). Write for a non-lawyer buyer. Be concise but thorough â each finding must include a clear explanation of WHY it matters, what could go wrong, and exactly what the buyer should do.`,
       userPrompt: (findings, fileTexts) => `Analyse these NZ property documents and produce an Essential Risk Report.
 
 RULE ENGINE PRE-SCAN:
@@ -261,7 +261,7 @@ Produce a professional HTML report with these sections. IMPORTANT: Every single 
 1. EXECUTIVE SUMMARY (2-3 sentences: overall risk level, key risks, clear recommendation on whether buyer should proceed)
 2. HIGH RISK FINDINGS (for each finding: full paragraph explaining the issue, NZ legal context, financial impact if ignored, and one specific action with a deadline)
 3. MEDIUM RISK FINDINGS (for each finding: full paragraph with explanation and specific recommended action)
-4. LOW RISK FINDINGS (brief but complete — 2 sentences each minimum)
+4. LOW RISK FINDINGS (brief but complete â 2 sentences each minimum)
 5. PRE-UNCONDITIONAL CHECKLIST (5-7 specific must-do actions before signing, each with a brief reason why)
 
 Format: Use <h3> for section headers, <div class="finding"> wrapping each individual finding, <p> for paragraphs. Colour-code: HIGH risk findings in a box with red left border, MEDIUM with orange, LOW with green. Keep language plain, direct, and actionable.`
@@ -269,7 +269,7 @@ Format: Use <h3> for section headers, <div class="finding"> wrapping each indivi
     complete: {
       model: 'gpt-4o-mini',
       max_tokens: 4000,
-      systemPrompt: `You are a senior New Zealand property lawyer producing a detailed analysis for a homebuyer client. You have deep knowledge of NZ property law including the Property Law Act 2007, Unit Titles Act 2010, Building Act 2004, Resource Management Act 1991, and REINZ standards. Reference specific legislation by name and section number where possible. Provide detailed, actionable advice. Every finding must be a substantial paragraph that a client has genuinely paid for — not bullet points or brief mentions.`,
+      systemPrompt: `You are a senior New Zealand property lawyer producing a detailed analysis for a homebuyer client. You have deep knowledge of NZ property law including the Property Law Act 2007, Unit Titles Act 2010, Building Act 2004, Resource Management Act 1991, and REINZ standards. Reference specific legislation by name and section number where possible. Provide detailed, actionable advice. Every finding must be a substantial paragraph that a client has genuinely paid for â not bullet points or brief mentions.`,
       userPrompt: (findings, fileTexts) => `Conduct a Complete Analysis of these NZ property documents.
 
 RULE ENGINE PRE-SCAN:
@@ -281,7 +281,7 @@ ${findings.flatMap(f => f.flaggedContexts).slice(0, 10).map((c, i) => `[Excerpt 
 Produce a comprehensive HTML report. CRITICAL REQUIREMENT: Every finding must be written as a detailed, substantive paragraph (4-6 sentences minimum). Do NOT use single-sentence bullet points for findings. Each finding must include: (a) a clear description of the specific issue found in the documents, (b) the legal or regulatory framework that applies under NZ law, (c) the realistic financial or legal consequences if the buyer ignores it, (d) a specific, actionable step the buyer must take, and (e) an urgency level (before going unconditional / before settlement / within 12 months).
 
 Report sections:
-1. EXECUTIVE SUMMARY (overall risk assessment, clear purchase recommendation — proceed / proceed with conditions / reconsider)
+1. EXECUTIVE SUMMARY (overall risk assessment, clear purchase recommendation â proceed / proceed with conditions / reconsider)
 2. HIGH RISK FINDINGS (each as a full paragraph: specific issue found, NZ legal context with legislation name, financial impact estimate, what happens if ignored, specific action required, and timing)
 3. MEDIUM RISK FINDINGS (each as a full paragraph: issue, legal context, recommended action with timeframe)
 4. LOW RISK FINDINGS (2-3 sentences each: issue and monitoring recommendation)
@@ -294,7 +294,7 @@ Format: Use <h3> headers, <div class="finding"> for each individual finding. Col
     premium: {
       model: 'gpt-4o',
       max_tokens: 6000,
-      systemPrompt: `You are a senior NZ property conveyancing solicitor producing a formal legal analysis report. You have expert knowledge of NZ property law: Property Law Act 2007, Unit Titles Act 2010 (especially ss.144-148 pre-contract disclosure), Building Act 2004 (especially ss.36, 92, 364A regarding code compliance), Resource Management Act 1991, Weathertight Homes Resolution Services Act 2006, and standard REINZ S&P Agreement clauses. Cite specific sections. Write in formal legal report style but remain accessible to a non-lawyer buyer. This is a premium paid report — every section must be comprehensive, specific to the documents provided, and of genuine legal quality.`,
+      systemPrompt: `You are a senior NZ property conveyancing solicitor producing a formal legal analysis report. You have expert knowledge of NZ property law: Property Law Act 2007, Unit Titles Act 2010 (especially ss.144-148 pre-contract disclosure), Building Act 2004 (especially ss.36, 92, 364A regarding code compliance), Resource Management Act 1991, Weathertight Homes Resolution Services Act 2006, and standard REINZ S&P Agreement clauses. Cite specific sections. Write in formal legal report style but remain accessible to a non-lawyer buyer. This is a premium paid report â every section must be comprehensive, specific to the documents provided, and of genuine legal quality.`,
       userPrompt: (findings, fileTexts) => `Produce a Premium Legal Analysis Report for this NZ property purchase.
 
 RULE ENGINE PRE-SCAN:
@@ -303,15 +303,15 @@ ${findings.flatMap(f => f.ruleFindings).slice(0, 20).map((f, i) => `${i+1}. [${f
 DOCUMENT EXCERPTS:
 ${findings.flatMap(f => f.flaggedContexts).slice(0, 12).map((c, i) => `[Excerpt ${i+1}]: ${c}`).join('\n\n')}
 
-Produce a formal legal-style HTML report. MANDATORY QUALITY STANDARD: Each finding must be a substantive legal analysis of 5-8 sentences minimum. Cite specific NZ statute sections (e.g., "s.36 Building Act 2004"). Identify the specific clause or item in the documents that triggered the finding. Quantify financial risks in NZD where possible. State the buyer's legal position, vendor obligations, and available remedies. Do not produce generic advice — it must be specific to the issues found.
+Produce a formal legal-style HTML report. MANDATORY QUALITY STANDARD: Each finding must be a substantive legal analysis of 5-8 sentences minimum. Cite specific NZ statute sections (e.g., "s.36 Building Act 2004"). Identify the specific clause or item in the documents that triggered the finding. Quantify financial risks in NZD where possible. State the buyer's legal position, vendor obligations, and available remedies. Do not produce generic advice â it must be specific to the issues found.
 
 Report sections:
-1. EXECUTIVE SUMMARY AND PURCHASE RECOMMENDATION (clear verdict: Proceed / Proceed with Conditions / Do Not Proceed — with specific reasons tied to the documents reviewed)
+1. EXECUTIVE SUMMARY AND PURCHASE RECOMMENDATION (clear verdict: Proceed / Proceed with Conditions / Do Not Proceed â with specific reasons tied to the documents reviewed)
 2. HIGH RISK FINDINGS (formal legal analysis for each: specific document reference, applicable NZ statute with section number, vendor's legal obligations, buyer's legal remedies, realistic cost estimate in NZD, and required action with deadline)
 3. MEDIUM RISK FINDINGS (full legal analysis: statute reference, action steps, timeframe)
 4. LOW RISK FINDINGS (legal context, monitoring recommendation)
-5. NEGOTIATION STRATEGY (specific leverage points with suggested price reduction amounts in NZD, specific conditions to add to contract, and remediation requests — written as direct instructions to the buyer)
-6. FULL NEGOTIATION SCRIPT (exact wording the buyer or their solicitor can use when negotiating with the vendor or agent — formatted as a ready-to-use script)
+5. NEGOTIATION STRATEGY (specific leverage points with suggested price reduction amounts in NZD, specific conditions to add to contract, and remediation requests â written as direct instructions to the buyer)
+6. FULL NEGOTIATION SCRIPT (exact wording the buyer or their solicitor can use when negotiating with the vendor or agent â formatted as a ready-to-use script)
 7. LEGAL CONDITIONS TO ADD TO CONTRACT (specific clauses the buyer should request be added before going unconditional, with exact wording)
 8. PRE-UNCONDITIONAL DUE DILIGENCE CHECKLIST (15+ items, priority-ordered, each with a one-sentence legal reason)
 9. WHEN TO INVOLVE A SOLICITOR (specific issues from these documents that require immediate professional legal advice)
@@ -350,7 +350,8 @@ const tier = tierConfig[packageType] || tierConfig.complete;
 async function saveOrderToSupabase(record) {
   const { data, error } = await supabase
     .from('orders')
-    .insert([record]);
+    .insert([record])
+    .select();
   if (error) {
     if (error.code === '23505') {
       // Duplicate key - order already processed (idempotent)
@@ -614,7 +615,7 @@ function parseRiskCountsFromHtml(reportHtml, allFindings) {
     lowRisks  = allFindings.reduce((s, f) => s + f.ruleFindings.filter(r => r.risk === 'LOW').length, 0);
   }
 
-  console.log('Risk counts — HIGH:', highRisks, 'MED:', medRisks, 'LOW:', lowRisks);
+  console.log('Risk counts â HIGH:', highRisks, 'MED:', medRisks, 'LOW:', lowRisks);
   return { highRisks, medRisks, lowRisks, total: highRisks + medRisks + lowRisks };
 }
 
